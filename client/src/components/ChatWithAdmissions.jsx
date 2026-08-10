@@ -6,7 +6,6 @@ import {
   Bot,
   User,
   UserCog,
-  Loader2,
   RotateCcw,
 } from "lucide-react";
 import { getFaqs } from "../api/client";
@@ -22,7 +21,9 @@ export default function ChatWithAdmissions({ onClose }) {
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState("BOT");
   const [input, setInput] = useState("");
-  const [sending, setSending] = useState(false);
+  // Only tracks "waiting on the BOT specifically" — never set/used while
+  // chatting with an admin, so admin conversations are never locked.
+  const [awaitingBotReply, setAwaitingBotReply] = useState(false);
   const [connected, setConnected] = useState(false);
   const bottomRef = useRef(null);
   const localKeyRef = useRef(0);
@@ -48,19 +49,31 @@ export default function ChatWithAdmissions({ onClose }) {
         })),
       );
       setConnected(true);
+      // A fresh state load always means nothing is pending.
+      setAwaitingBotReply(false);
     }
     function handleMessage(message) {
       setMessages((prev) => [
         ...prev,
         { key: message._id, sender: message.sender, text: message.text },
       ]);
-      setSending(false);
+      // Only an actual bot reply clears the "waiting on bot" lock. The
+      // student's own message also echoes back through this same event
+      // (server broadcasts it to the sender too) — that echo must NOT
+      // clear the lock, or the typing indicator/block would vanish
+      // instantly instead of lasting until the bot actually answers.
+      if (message.sender === "bot") {
+        setAwaitingBotReply(false);
+      }
     }
     function handleStatus({ status }) {
       setStatus(status);
+      // Switching away from BOT (e.g. handed off to an admin) means
+      // there's no bot reply left to wait on.
+      if (status !== "BOT") setAwaitingBotReply(false);
     }
     function handleError({ message }) {
-      setSending(false);
+      setAwaitingBotReply(false);
       setMessages((prev) => [
         ...prev,
         { key: `err-${Date.now()}`, sender: "bot", text: message },
@@ -86,13 +99,18 @@ export default function ChatWithAdmissions({ onClose }) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, sending]);
+  }, [messages, awaitingBotReply]);
 
   function sendText(text) {
     const trimmed = text.trim();
     if (!trimmed) return;
-    setSending(true);
+    // Only block sending when we're mid-conversation with the BOT and
+    // still waiting on its reply. Admin conversations are never locked —
+    // students can send as many messages as they want while chatting
+    // with a human.
+    if (status === "BOT" && awaitingBotReply) return;
     setInput("");
+    if (status === "BOT") setAwaitingBotReply(true);
     getStudentSocket().emit("student:message", {
       sessionId: getChatSessionId(),
       text: trimmed,
@@ -100,6 +118,7 @@ export default function ChatWithAdmissions({ onClose }) {
   }
 
   function handleAsk(faq) {
+    if (status === "BOT" && awaitingBotReply) return;
     localKeyRef.current += 1;
     setMessages((prev) => [
       ...prev,
@@ -131,7 +150,7 @@ export default function ChatWithAdmissions({ onClose }) {
     const newId = resetChatSession();
     setMessages([]);
     setStatus("BOT");
-    setSending(false);
+    setAwaitingBotReply(false);
     getStudentSocket().emit("student:join", { sessionId: newId });
   }
 
@@ -229,14 +248,16 @@ export default function ChatWithAdmissions({ onClose }) {
           </div>
         ))}
 
-        {sending && (
+        {status === "BOT" && awaitingBotReply && (
           <div className="flex gap-2 items-start">
             <span className="w-6 h-6 rounded-full bg-navy-100 dark:bg-navy-700 flex items-center justify-center shrink-0 mt-0.5">
-              <Loader2 size={12} className="text-navy-500 animate-spin" />
+              <Bot size={12} className="text-navy-500" />
             </span>
-            <p className="text-sm bg-white dark:bg-navy-800 border border-navy-100 dark:border-navy-700 rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-navy-400 italic">
-              Typing…
-            </p>
+            <div className="flex items-center gap-1 bg-white dark:bg-navy-800 border border-navy-100 dark:border-navy-700 rounded-2xl rounded-tl-sm px-4 py-3.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-navy-300 dark:bg-navy-500 animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-navy-300 dark:bg-navy-500 animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-navy-300 dark:bg-navy-500 animate-bounce" />
+            </div>
           </div>
         )}
 
@@ -246,7 +267,8 @@ export default function ChatWithAdmissions({ onClose }) {
               <button
                 key={f._id}
                 onClick={() => handleAsk(f)}
-                className="text-xs font-medium bg-white dark:bg-navy-800 border border-teal-200 dark:border-teal-700 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-full hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors"
+                disabled={status === "BOT" && awaitingBotReply}
+                className="text-xs font-medium bg-white dark:bg-navy-800 border border-teal-200 dark:border-teal-700 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-full hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {f.question}
               </button>
@@ -269,14 +291,20 @@ export default function ChatWithAdmissions({ onClose }) {
               ? "Connecting…"
               : status === "WAITING_FOR_ADMIN"
                 ? "An admin will be with you shortly…"
-                : "Type your question…"
+                : status === "BOT" && awaitingBotReply
+                  ? "Waiting for a reply…"
+                  : "Type your question…"
           }
-          disabled={!connected}
+          disabled={!connected || (status === "BOT" && awaitingBotReply)}
           className="flex-1 min-w-0 px-3.5 py-2.5 text-sm rounded-full border border-navy-100 dark:border-navy-700 bg-white dark:bg-navy-800 text-navy-800 dark:text-paper outline-none focus:border-marigold-300 disabled:opacity-60"
         />
         <button
           type="submit"
-          disabled={!connected || !input.trim() || sending}
+          disabled={
+            !connected ||
+            !input.trim() ||
+            (status === "BOT" && awaitingBotReply)
+          }
           aria-label="Send"
           className="w-10 h-10 shrink-0 rounded-full bg-marigold hover:bg-marigold-500 disabled:opacity-50 text-navy-900 flex items-center justify-center transition-colors"
         >
@@ -287,7 +315,7 @@ export default function ChatWithAdmissions({ onClose }) {
         <div className="px-3 pb-3 -mt-1 shrink-0">
           <button
             onClick={() => sendText("chat with admin")}
-            disabled={!connected}
+            disabled={!connected || awaitingBotReply}
             className="w-full text-xs font-medium text-navy-500 dark:text-navy-300 hover:text-navy-800 dark:hover:text-white transition-colors py-1"
           >
             Prefer to talk to a person? Chat with admin →
