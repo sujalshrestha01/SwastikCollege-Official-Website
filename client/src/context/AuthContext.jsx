@@ -69,10 +69,13 @@ export function AuthProvider({ children }) {
   }
 
   // Merges a partial update into the current admin (e.g. after toggling
-  // "Available" or "Notifications") without a full re-fetch.
-  function updateAdmin(partial) {
+  // "Available" or "Notifications") without a full re-fetch. Wrapped in
+  // useCallback so it has a stable identity across renders — consumers
+  // (like AdminLayout's socket-listener effects) can safely list it as a
+  // dependency without re-subscribing on every unrelated re-render.
+  const updateAdmin = useCallback((partial) => {
     setAdmin((prev) => (prev ? { ...prev, ...partial } : prev));
-  }
+  }, []);
 
   return (
     <AuthContext.Provider

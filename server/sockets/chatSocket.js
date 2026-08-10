@@ -36,6 +36,24 @@ function conversationRoom(sessionId) {
   return `conv:${sessionId}`;
 }
 
+// Set once initChatSocket() runs. REST controllers (e.g. pushController's
+// updatePreferences) have no direct access to the socket.io instance, but
+// still need to push live updates to an admin's OTHER open tabs/devices —
+// e.g. toggling "Available" on a laptop should update a phone session
+// instantly, without that phone needing to refresh or log out/in.
+let sharedAdminNsp = null;
+
+// Broadcasts a partial admin-preferences change (available and/or
+// notificationsEnabled) to every socket this admin currently has open,
+// on any device. Safe to call even before sockets are initialized (e.g.
+// in tests) — it's a no-op until initChatSocket() has run.
+export function notifyAdminPreferencesChanged(adminId, partial) {
+  if (!sharedAdminNsp) return;
+  sharedAdminNsp
+    .to(`admin:${adminId}`)
+    .emit("admin:preferences_updated", partial);
+}
+
 function anyAdminAvailable() {
   return Admin.exists({ status: "active", available: true });
 }
@@ -81,6 +99,7 @@ async function saveMessage(conversationId, sender, text, sourceChunkIds = []) {
 
 export function initChatSocket(io) {
   const adminNsp = io.of("/admin");
+  sharedAdminNsp = adminNsp;
 
   adminNsp.use((socket, next) => {
     try {

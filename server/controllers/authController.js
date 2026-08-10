@@ -11,6 +11,29 @@ function signToken(admin) {
   );
 }
 
+// Single allowlist of admin fields ever sent to the client, shared by
+// every endpoint that returns an admin object (login, /me, preference
+// updates, etc). This is what previously caused the "toggles show off
+// until I refresh" bug: /login hand-picked its own field list and simply
+// forgot to include `available`/`notificationsEnabled`, so right after
+// login those came back as `undefined` (rendered as OFF) even though the
+// DB had the correct values — only a later /me refetch (page reload)
+// picked them up. Routing every response through one function makes that
+// class of bug structurally impossible going forward, and is also safer
+// than a "select everything except password" blocklist approach, since
+// a newly added sensitive field is excluded by default instead of
+// accidentally leaking until someone remembers to deselect it.
+function serializeAdmin(admin) {
+  return {
+    id: admin._id,
+    name: admin.name,
+    email: admin.email,
+    role: admin.role,
+    available: admin.available,
+    notificationsEnabled: admin.notificationsEnabled,
+  };
+}
+
 function requireSuperadmin(req, res) {
   if (req.admin.role !== "superadmin") {
     res.status(403).json({ message: "Only a superadmin can do this" });
@@ -43,15 +66,7 @@ export async function login(req, res) {
       return res.status(401).json({ message: "Invalid email or password" });
 
     const token = signToken(admin);
-    res.json({
-      token,
-      admin: {
-        id: admin._id,
-        name: admin.name,
-        email: admin.email,
-        role: admin.role,
-      },
-    });
+    res.json({ token, admin: serializeAdmin(admin) });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });
   }
@@ -59,9 +74,9 @@ export async function login(req, res) {
 
 // GET /api/auth/me
 export async function getMe(req, res) {
-  const admin = await Admin.findById(req.admin.id).select("-password");
+  const admin = await Admin.findById(req.admin.id);
   if (!admin) return res.status(404).json({ message: "Admin not found" });
-  res.json({ admin });
+  res.json({ admin: serializeAdmin(admin) });
 }
 
 // PUT /api/auth/password — any logged-in admin changes their own password
@@ -268,11 +283,9 @@ export async function resetPassword(req, res) {
     }).select("+resetPasswordToken +resetPasswordExpires");
 
     if (!admin) {
-      return res
-        .status(400)
-        .json({
-          message: "Reset link is invalid, already used, or has expired",
-        });
+      return res.status(400).json({
+        message: "Reset link is invalid, already used, or has expired",
+      });
     }
 
     admin.password = password; // hashed automatically by the pre('save') hook

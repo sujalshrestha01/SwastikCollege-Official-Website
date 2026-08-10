@@ -393,7 +393,7 @@ function LiveChatStatusControls() {
 }
 
 export default function AdminLayout() {
-  const { admin } = useAuth();
+  const { admin, updateAdmin } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [alert, setAlert] = useState(null);
   const [pushWarning, setPushWarning] = useState(false);
@@ -450,6 +450,22 @@ export default function AdminLayout() {
     };
   }, [admin]);
 
+  // Live cross-device sync: if this admin toggles "Available" or
+  // "Notifications" on another device (or another tab), reflect it here
+  // instantly — no refresh, no re-login. See notifyAdminPreferencesChanged
+  // in server/sockets/chatSocket.js for the broadcast side.
+  useEffect(() => {
+    if (!admin) return;
+    const socket = getAdminSocket();
+    function handlePreferencesUpdated(partial) {
+      updateAdmin(partial);
+    }
+    socket.on("admin:preferences_updated", handlePreferencesUpdated);
+    return () => {
+      socket.off("admin:preferences_updated", handlePreferencesUpdated);
+    };
+  }, [admin, updateAdmin]);
+
   useEffect(() => {
     if (!alert) return;
     const t = setTimeout(() => setAlert(null), 7000);
@@ -492,17 +508,17 @@ export default function AdminLayout() {
             </p>
           </div>
           <LiveChatStatusControls />
-          {pushWarning && (
-            <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 shadow-sm flex items-start gap-3 shrink-0">
-              <BellOff size={18} className="text-red-500 mt-0.5 shrink-0" />
-              <span className="min-w-0 text-sm text-red-700">
-                Notifications are switched on, but this browser has blocked them
-                — you won't actually receive any here. Allow notifications for
-                this site in your browser's settings, then reload this page.
-              </span>
-            </div>
-          )}
         </header>
+        {pushWarning && (
+          <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 shadow-sm flex items-start gap-3 shrink-0">
+            <BellOff size={18} className="text-red-500 mt-0.5 shrink-0" />
+            <span className="min-w-0 text-sm text-red-700">
+              Notifications are switched on, but this browser has blocked them —
+              you won't actually receive any here. Allow notifications for this
+              site in your browser's settings, then reload this page.
+            </span>
+          </div>
+        )}
         {alert && (
           <button
             onClick={() => {

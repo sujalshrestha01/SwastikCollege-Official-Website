@@ -1,5 +1,6 @@
 import Admin from "../models/Admin.js";
 import { getVapidPublicKey, pushEnabled } from "../utils/webPush.js";
+import { notifyAdminPreferencesChanged } from "../sockets/chatSocket.js";
 
 // GET /api/admin-push/vapid-public-key
 export function vapidPublicKey(req, res) {
@@ -69,6 +70,12 @@ export async function updatePreferences(req, res) {
     const admin = await Admin.findByIdAndUpdate(req.admin.id, update, {
       new: true,
     }).select("-password");
+
+    // Live-sync this change to any other tab/device this admin is
+    // currently logged into (e.g. a laptop and a phone both signed in) —
+    // no refresh or re-login required on the other end.
+    notifyAdminPreferencesChanged(req.admin.id, update);
+
     res.json({ admin });
   } catch (err) {
     res
