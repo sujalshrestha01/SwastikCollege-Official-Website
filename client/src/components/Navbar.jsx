@@ -6,6 +6,7 @@ import { useSettings } from "../context/SettingsContext";
 import { resolveImageUrl } from "../api/client";
 import logo from "../../assets/swastik-logo.png";
 import NotificationTicker from "./NotificationTicker";
+import { useLockBodyScroll } from "../hooks/useLockBodyScroll";
 
 const ALL_LINKS = [
   { to: "/", label: "Home" },
@@ -23,6 +24,10 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { settings, isPageEnabled } = useSettings();
+
+  // Stop the page underneath from scrolling while the mobile dropdown
+  // menu is open.
+  useLockBodyScroll(open);
 
   // Filter out feature-flagged links, and links to pages an admin has
   // turned off entirely via the visibility toggles.

@@ -3,12 +3,16 @@ import { Link } from "react-router";
 import { Plus, X, MessageCircle, ClipboardEdit } from "lucide-react";
 import ChatWithAdmissions from "./ChatWithAdmissions";
 import { useSettings } from "../context/SettingsContext";
+import { useLockBodyScroll } from "../hooks/useLockBodyScroll";
 
 export default function FloatingQuickAction() {
   const [open, setOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const { isPageEnabled } = useSettings();
   const contactEnabled = isPageEnabled("contact");
+
+  // Stop the page underneath from scrolling while the chat panel is open.
+  useLockBodyScroll(chatOpen);
 
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
