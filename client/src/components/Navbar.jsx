@@ -95,7 +95,7 @@ export default function Navbar() {
             </NavLink>
           ))}
         </div>
-        {/* Action Controls */}
+        {/* Action Controls (desktop) */}
         <div className="hidden lg:flex items-center gap-2 lg:gap-3 shrink-0">
           <button
             onClick={toggleTheme}
@@ -111,14 +111,27 @@ export default function Navbar() {
             Apply Now
           </Link>
         </div>
-        {/* Mobile Hamburger Toggle */}
-        <button
-          className="lg:hidden p-2 text-navy-700 dark:text-paper focus:outline-hidden active:scale-90 transition-transform"
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile-only Action Controls: theme toggle sits right next to the
+            hamburger, so it's reachable without opening the menu — but this
+            group is hidden on desktop (lg:hidden), leaving the larger-screen
+            layout above untouched. */}
+        <div className="flex lg:hidden items-center gap-1 shrink-0">
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="p-2 rounded-full text-navy-600 dark:text-navy-100 hover:bg-navy-100 dark:hover:bg-navy-700 active:scale-90 transition-all"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          {/* Mobile Hamburger Toggle */}
+          <button
+            className="p-2 text-navy-700 dark:text-paper focus:outline-hidden active:scale-90 transition-transform"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Drawer Menu */}
@@ -142,15 +155,7 @@ export default function Navbar() {
               </NavLink>
             ))}
 
-            <div className="flex items-center justify-between pt-4 mt-1">
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-2 text-sm font-medium text-navy-600 dark:text-navy-100 p-1"
-              >
-                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
-              </button>
-
+            <div className="flex justify-end pt-4 mt-1">
               <Link
                 to="/contact"
                 onClick={() => setOpen(false)}
