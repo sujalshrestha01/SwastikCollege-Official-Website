@@ -95,7 +95,7 @@ export default function ProgramsOverview() {
 
         {/* Non-Credit Course (NCC) Card */}
         <Link
-          to="/programs"
+          to="/programs/non-credit"
           className="group flex flex-col justify-between rounded-2xl p-6 bg-white dark:bg-navy-900/90 border border-slate-200/80 dark:border-navy-700 border-b-2 border-b-transparent dark:border-b-transparent hover:border-b-[#D9383A] dark:hover:border-b-[#3B82F6] shadow-xs hover:shadow-md dark:shadow-navy-950/50 hover:-translate-y-1 transition-all duration-300"
         >
           <div>
