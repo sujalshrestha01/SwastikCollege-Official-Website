@@ -12,43 +12,66 @@ import PlacementPartners from "./PlacementPartners";
 import SisterInstitutes from "./SisterInstitutes";
 import WhyChooseUs from "./WhyChooseUs";
 import { Section } from "../components/Visibility";
+import Reveal from "../components/Reveal";
 
 export default function Home() {
   return (
     <>
+      {/* Hero stays un-wrapped — it's the first thing on screen, so it
+          should be there immediately rather than fading in. */}
       <Section page="home" section="hero">
         <Hero />
       </Section>
       <Section page="home" section="quickAccess">
-        <QuickAccessCards />
+        <Reveal>
+          <QuickAccessCards />
+        </Reveal>
       </Section>
       <Section page="home" section="whyChooseUs">
-        <WhyChooseUs />
+        <Reveal>
+          <WhyChooseUs />
+        </Reveal>
       </Section>
       <Section page="home" section="programsOverview">
-        <ProgramsOverview />
+        <Reveal>
+          <ProgramsOverview />
+        </Reveal>
       </Section>
       <Section page="home" section="swastikExperience">
-        <SwastikExperience />
+        <Reveal>
+          <SwastikExperience />
+        </Reveal>
       </Section>
 
       <Section page="home" section="eventCountdown">
-        <EventCountdown />
+        <Reveal>
+          <EventCountdown />
+        </Reveal>
       </Section>
       <Section page="home" section="newsEvents">
-        <NewsEvents />
+        <Reveal>
+          <NewsEvents />
+        </Reveal>
       </Section>
       <Section page="home" section="takeATour">
-        <TakeATour />
+        <Reveal>
+          <TakeATour />
+        </Reveal>
       </Section>
       <Section page="home" section="placementPartners">
-        <PlacementPartners />
+        <Reveal>
+          <PlacementPartners />
+        </Reveal>
       </Section>
       <Section page="home" section="sisterInstitutes">
-        <SisterInstitutes />
+        <Reveal>
+          <SisterInstitutes />
+        </Reveal>
       </Section>
       <Section page="home" section="blog">
-        <BlogSection />
+        <Reveal>
+          <BlogSection />
+        </Reveal>
       </Section>
     </>
   );

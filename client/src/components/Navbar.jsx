@@ -113,7 +113,7 @@ export default function Navbar() {
         </div>
         {/* Mobile Hamburger Toggle */}
         <button
-          className="lg:hidden p-2 text-navy-700 dark:text-paper focus:outline-hidden"
+          className="lg:hidden p-2 text-navy-700 dark:text-paper focus:outline-hidden active:scale-90 transition-transform"
           onClick={() => setOpen((o) => !o)}
           aria-label="Toggle menu"
         >
@@ -123,7 +123,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {open && (
-        <div className="lg:hidden border-t border-navy-100 dark:border-navy-700 bg-paper dark:bg-navy-900 px-4 pb-5 pt-2 max-h-[85vh] overflow-y-auto">
+        <div className="lg:hidden border-t border-navy-100 dark:border-navy-700 bg-paper dark:bg-navy-900 px-4 pb-5 pt-2 max-h-[85vh] overflow-y-auto animate-[fadeIn_0.2s_ease-out]">
           <div className="flex flex-col gap-1">
             {navLinks.map((l) => (
               <NavLink

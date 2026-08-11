@@ -162,7 +162,7 @@ export default function ChatWithAdmissions({ onClose }) {
         : "Usually answers instantly";
 
   return (
-    <div className="w-[92vw] max-w-sm bg-white dark:bg-navy-800 rounded-2xl shadow-2xl border border-navy-100 dark:border-navy-700 flex flex-col overflow-hidden max-h-[70vh]">
+    <div className="w-[92vw] max-w-sm bg-white dark:bg-navy-800 rounded-2xl shadow-2xl border border-navy-100 dark:border-navy-700 flex flex-col overflow-hidden max-h-[70vh] animate-[modalIn_0.25s_ease-out]">
       {/* Header */}
       <div className="bg-navy-800 dark:bg-navy-900 text-white px-4 py-3.5 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5">
