@@ -38,7 +38,7 @@ export default function FloatingQuickAction() {
               className="flex items-center gap-2 bg-white dark:bg-navy-800 border border-navy-100 dark:border-navy-700 shadow-lg text-navy dark:text-paper text-sm font-medium pl-4 pr-3 py-2.5 rounded-full hover:border-marigold-300 active:scale-95 transition-all"
               style={{ animationDelay: "40ms" }}
             >
-              Apply Now
+              Send Inquiry
               <span className="w-7 h-7 rounded-full bg-marigold-50 dark:bg-navy-700 text-marigold-600 dark:text-marigold-300 flex items-center justify-center">
                 <ClipboardEdit size={14} />
               </span>

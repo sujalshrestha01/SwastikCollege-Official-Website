@@ -57,7 +57,7 @@ export default function WhyChooseUs() {
     : DEFAULT_FEATURES;
 
   return (
-    <section className="w-full bg-slate-50/80 dark:bg-navy-900/90 py-16 px-4 sm:px-6 lg:px-8 border-y border-slate-200/60 dark:border-navy-700 transition-colors duration-300">
+    <section className="w-full  bg-slate-50/80 dark:bg-navy-900/90 py-16 px-4 sm:px-6 lg:px-8  border-slate-200/60 dark:border-navy-700 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-[#D9383A] dark:text-[#3B82F6]">

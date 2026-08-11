@@ -115,9 +115,9 @@ export default function Footer() {
   ].filter((l) => isPageEnabled(l.page));
 
   return (
-    <footer className="bg-navy-900 text-navy-200 pt-16 pb-8 mt-16">
+    <footer className="bg-navy-900 text-navy-200  pb-8 mt-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-navy-700">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12 border-y border-navy-700">
           <div>
             <div className="flex items-center gap-2 mb-4">
               {/* <Hexagon className="text-marigold" size={22} fill="#1B2A4A" /> */}
