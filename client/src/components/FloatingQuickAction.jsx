@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Plus, X, MessageCircle, ClipboardEdit } from "lucide-react";
+import { X, MessageCircle, ClipboardEdit, MessageSquareText } from "lucide-react";
 import ChatWithAdmissions from "./ChatWithAdmissions";
 import { useSettings } from "../context/SettingsContext";
 import { useLockBodyScroll } from "../hooks/useLockBodyScroll";
@@ -58,9 +58,9 @@ export default function FloatingQuickAction() {
           open || chatOpen ? "Close quick actions" : "Open quick actions"
         }
         aria-expanded={open || chatOpen}
-        className="w-14 h-14 rounded-full bg-marigold hover:bg-marigold-500 text-navy-900 shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        className="w-14 h-14 rounded-full rounded-tr-lg bg-marigold hover:bg-marigold-500 text-navy-900 shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
       >
-        {open || chatOpen ? <X size={22} /> : <Plus size={22} />}
+        {open || chatOpen ? <X size={22} /> : <MessageSquareText size={26} />}
       </button>
     </div>
   );
