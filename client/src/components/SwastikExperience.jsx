@@ -23,9 +23,10 @@ function Tile({ event, className }) {
         alt={event.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_180%_100%_at_bottom_left,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0.5)_30%,rgba(0,0,0,0.15)_55%,transparent_75%)]" />
+
       <div className="absolute bottom-0 left-0 right-0 p-5">
-        <h3 className="font-display text-white font-bold text-lg uppercase tracking-wide">
+        <h3 className="font-display text-white font-bold text-lg uppercase tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
           {event.title}
         </h3>
         {event.description && (
