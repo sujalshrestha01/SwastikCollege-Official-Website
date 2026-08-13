@@ -24,11 +24,30 @@ function authHeaders() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+// Cloudinary image-delivery URLs support inserting transformation params
+// right after "/upload/". f_auto lets Cloudinary pick the smallest format
+// the visitor's browser supports (WebP/AVIF instead of the original
+// JPG/PNG); q_auto picks a quality level that's visually near-identical
+// but meaningfully smaller. This typically cuts delivered bytes 50-70%
+// with no visible difference — worth doing everywhere images are shown,
+// since Cloudinary's free tier bills storage AND delivery bandwidth
+// against the same shared credit pool.
+function withAutoOptimization(url) {
+  if (!/res\.cloudinary\.com/i.test(url)) return url; // not a Cloudinary URL
+  if (!/\/image\/upload\//i.test(url)) return url; // only Cloudinary's image-delivery type
+  if (/\.pdf($|\?)/i.test(url)) return url; // leave PDFs untouched — original format matters for documents/downloads
+  if (/\/upload\/[^/]*f_auto/i.test(url)) return url; // already has a transformation (e.g. PDF thumbnail path)
+  return url.replace(/\/upload\//, "/upload/f_auto,q_auto/");
+}
+
 // Resolves a stored image path (e.g. "/uploads/abc.jpg") into a full URL the
-// browser can load. Absolute URLs (http://, https://) pass through unchanged.
+// browser can load. Absolute URLs (http://, https://) pass through unchanged
+// (aside from the Cloudinary optimization above).
 export function resolveImageUrl(path) {
   if (!path) return "";
-  if (/^https?:\/\//i.test(path) || path.startsWith("data:")) return path;
+  if (/^https?:\/\//i.test(path) || path.startsWith("data:")) {
+    return withAutoOptimization(path);
+  }
   return `${SERVER_ORIGIN}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
