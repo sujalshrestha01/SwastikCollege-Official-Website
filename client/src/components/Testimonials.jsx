@@ -88,9 +88,6 @@ export default function Testimonials() {
 
     const start = track.scrollLeft;
     const startTime = performance.now();
-    const wasPaused = isPausedRef.current;
-
-    isPausedRef.current = true;
 
     function frame(now) {
       const progress = Math.min((now - startTime) / STEP_DURATION_MS, 1);
@@ -99,20 +96,16 @@ export default function Testimonials() {
 
       track.scrollLeft = start + delta * eased;
 
-      // Keep the manual arrow navigation inside the loop.
+      // Keep the carousel inside the infinite loop.
       wrap();
 
       if (progress < 1) {
         requestAnimationFrame(frame);
-      } else {
-        wrap();
-        isPausedRef.current = wasPaused;
       }
     }
 
     requestAnimationFrame(frame);
   }
-
   function step(direction) {
     const card = firstCardRef.current;
 
