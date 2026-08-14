@@ -14,6 +14,7 @@ import {
   previewFile,
 } from "../api/client";
 import { Section } from "../components/Visibility";
+import SEO from "../components/SEO";
 
 const CATEGORIES = ["All", "Exams", "Admissions", "Events", "General"];
 
@@ -86,6 +87,12 @@ export default function NoticeBoard() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <SEO
+        title="Notice Board"
+        description="Latest exam routines, admission notices, events and announcements from Swastik College, Kathmandu."
+        path="/notices"
+        keywords="Swastik College notices, Swastik College exam routine, Swastik College admission notice"
+      />
       <Section page="notices" section="hero">
         <div className="flex items-center gap-2 mb-2 text-[#D9383A] dark:text-[#3B82F6]">
           <Bell size={16} />

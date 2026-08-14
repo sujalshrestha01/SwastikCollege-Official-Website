@@ -13,6 +13,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { getSkillCourses, getWorkshops, resolveImageUrl } from "../api/client";
+import SEO from "../components/SEO";
 
 function formatDate(iso) {
   if (!iso) return "";
@@ -39,6 +40,12 @@ export default function NonCreditCourses() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <SEO
+        title="Skill Courses & Workshops"
+        description="Explore short-term skill courses and workshops offered by Swastik College, Kathmandu — practical, industry-aligned training beyond the regular degree programs."
+        path="/programs/non-credit"
+        keywords="Swastik College workshops, Swastik College skill courses, non-credit courses Nepal"
+      />
       {/* Top Header */}
       <div className="mb-10">
         <Link

@@ -3,12 +3,99 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/swastik%20logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Swastik College — official website. Academic programs, notices, admissions and campus life." />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <title>Swastik College</title>
+    <meta name="theme-color" content="#1E3A8A" />
+
+    <!-- Primary SEO tags. These are the defaults shown to search engines and
+         to social crawlers that don't execute JavaScript (Facebook, LinkedIn,
+         WhatsApp, etc). Individual routes override title/description/canonical
+         at runtime via the <SEO> component (src/components/SEO.jsx), which
+         is picked up by Googlebot and other JS-rendering crawlers. -->
+    <title>
+      Swastik College | BSc. CSIT &amp; BCA College in Kathmandu, Nepal
+    </title>
+    <meta
+      name="description"
+      content="Swastik College is a Tribhuvan University (TU) affiliated college in Kathmandu, Nepal offering BSc. CSIT and BCA programs, with 100% placement support, industry partnerships and experienced faculty. Apply for admissions today."
+    />
+    <meta
+      name="keywords"
+      content="Swastik College, Swastik College Kathmandu, best college in Kathmandu, best college in Nepal, BSc CSIT college, CSIT college Nepal, BCA college Nepal, college Nepal, Tribhuvan University affiliated college, TU affiliated college Kathmandu, IT college Nepal"
+    />
+    <meta name="author" content="Swastik College" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://www.swastikcollege.edu.np/" />
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Swastik College" />
+    <meta
+      property="og:title"
+      content="Swastik College | BSc. CSIT  &amp; BCA College in Kathmandu, Nepal"
+    />
+    <meta
+      property="og:description"
+      content="TU-affiliated college in Kathmandu offering BSc. CSIT and BCA with  placement support and hands-on, industry-aligned learning."
+    />
+    <meta property="og:url" content="https://www.swastikcollege.edu.np/" />
+    <meta
+      property="og:image"
+      content="https://www.swastikcollege.edu.np/og-image.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Swastik College | BSc. CSIT  &amp; BCA College in Kathmandu, Nepal"
+    />
+    <meta
+      name="twitter:description"
+      content="TU-affiliated college in Kathmandu offering BSc. CSIT and BCA with  placement support and hands-on, industry-aligned learning."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.swastikcollege.edu.np/og-image.jpg"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured data: tells Google exactly what this organization is
+         called (and the short forms / common searches people use for it),
+         so it can be understood and matched even for loosely related or
+         slightly misspelled queries. Update sameAs with your real social
+         profile URLs, and update the phone/address once known. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollegeOrUniversity",
+        "name": "Swastik College",
+        "alternateName": [
+          "Swastik College Kathmandu",
+          "Swastik",
+          "Swastik CSIT College",
+          "Swastik BCA College"
+        ],
+        "url": "https://www.swastikcollege.edu.np/",
+        "logo": "https://www.swastikcollege.edu.np/swastik%20logo.png",
+        "description": "Tribhuvan University (TU) affiliated college in Kathmandu, Nepal offering BSc. CSIT and BCA programs with industry partnerships and 100% placement support.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Kathmandu",
+          "addressCountry": "NP"
+        },
+        "sameAs": []
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

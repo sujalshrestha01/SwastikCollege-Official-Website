@@ -13,6 +13,7 @@ import {
 } from "../api/client";
 import { Section } from "../components/Visibility";
 import { PdfThumbnail } from "../components/PdfThumbnail";
+import SEO from "../components/SEO";
 
 const CATEGORIES = [
   "All",
@@ -72,6 +73,12 @@ export default function Downloads() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <SEO
+        title="Downloads — Model & Past Question Papers"
+        description="Download model questions, past question papers, forms and other academic resources from Swastik College, Kathmandu."
+        path="/downloads"
+        keywords="Swastik College downloads, past question papers, model questions Nepal"
+      />
       <Section page="downloads" section="hero">
         <div className="flex items-center gap-2 mb-2 text-[#D9383A] dark:text-[#3B82F6]">
           <FolderDown size={16} />

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { ChevronDown, Download, CheckCircle2, ArrowLeft } from "lucide-react";
 import { getCourse, resolveImageUrl } from "../api/client";
+import SEO, { SITE_URL } from "../components/SEO";
 
 function AccordionItem({ semester, isOpen, onToggle }) {
   return (
@@ -59,6 +60,26 @@ export default function CourseDetail() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <SEO
+        title={`${course.name} — ${course.tagline || "Program Details"}`}
+        description={
+          course.description ||
+          `Details, eligibility, semester-wise curriculum and syllabus for ${course.name} at Swastik College, Kathmandu.`
+        }
+        path={`/programs/${slug}`}
+        keywords={`${course.name}, ${course.tagline || ""}, Swastik College, Kathmandu`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Course",
+          name: course.name,
+          description: course.description,
+          provider: {
+            "@type": "CollegeOrUniversity",
+            name: "Swastik College",
+            sameAs: SITE_URL,
+          },
+        }}
+      />
       <Link
         to="/programs"
         className="inline-flex items-center gap-1.5 text-sm text-navy-400 hover:text-marigold-600 mb-8"

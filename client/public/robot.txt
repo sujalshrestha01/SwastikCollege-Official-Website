@@ -1,0 +1,9 @@
+# Swastik College — robots.txt
+# https://www.swastikcollege.edu.np/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+Sitemap: https://www.swastikcollege.edu.np/sitemap.xml

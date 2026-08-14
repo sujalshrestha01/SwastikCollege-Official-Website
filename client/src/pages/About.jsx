@@ -18,6 +18,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router";
+import SEO from "../components/SEO";
 import { useSettings } from "../context/SettingsContext";
 import { getGalleryEvents, resolveImageUrl } from "../api/client";
 import { Section } from "../components/Visibility";
@@ -63,6 +64,12 @@ export default function About() {
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-100 transition-colors duration-300">
+      <SEO
+        title="About Us"
+        description="Learn about Swastik College's history, mission, vision and leadership — a Tribhuvan University affiliated college in Kathmandu shaping careers since its founding."
+        path="/about"
+        keywords="about Swastik College, Swastik College history, Swastik College mission vision"
+      />
       {/* ------------------------------------------------------------------ */}
       {/* 1. HERO SECTION                                                    */}
       {/* ------------------------------------------------------------------ */}

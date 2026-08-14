@@ -3,6 +3,7 @@ import { MapPin, Phone, Mail, Clock, CheckCircle2 } from "lucide-react";
 import { submitContactForm } from "../api/client";
 import { useSettings } from "../context/SettingsContext";
 import { Section } from "../components/Visibility";
+import SEO from "../components/SEO";
 
 const PROGRAMS = ["BSc. CSIT", "BCA", "General Inquiry"];
 
@@ -29,6 +30,12 @@ export default function Contact() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <SEO
+        title="Contact & Admissions"
+        description="Get in touch with Swastik College, Kathmandu for admissions inquiries, program information, office hours and directions."
+        path="/contact"
+        keywords="Swastik College admissions, Swastik College contact, Swastik College Kathmandu address"
+      />
       <Section page="contact" section="hero">
         <p className="font-mono text-xs tracking-[0.2em] text-[#D9383A] dark:text-[#3B82F6] uppercase mb-2">
           Admissions

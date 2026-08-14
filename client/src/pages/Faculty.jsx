@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Mail, GraduationCap } from "lucide-react";
 import { getFaculty, resolveImageUrl } from "../api/client";
 import { Section } from "../components/Visibility";
+import SEO from "../components/SEO";
 
 export default function Faculty() {
   const [faculty, setFaculty] = useState([]);
@@ -12,6 +13,12 @@ export default function Faculty() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <SEO
+        title="Faculty & Staff"
+        description="Meet the experienced faculty and staff at Swastik College, Kathmandu — educators and industry professionals dedicated to student mentorship."
+        path="/faculty"
+        keywords="Swastik College faculty, Swastik College teachers, Swastik College staff"
+      />
       <Section page="faculty" section="hero">
         <p className="font-mono text-xs tracking-[0.2em] text-[#D9383A] dark:text-[#3B82F6] uppercase mb-2">
           Our People

@@ -10,6 +10,7 @@ import {
 import { Link, useParams } from "react-router";
 import { getBlogs, getBlog, resolveImageUrl } from "../api/client";
 import { Section } from "../components/Visibility";
+import SEO, { SITE_URL, DEFAULT_OG_IMAGE } from "../components/SEO";
 
 function BlogDetail({ slug }) {
   const [post, setPost] = useState(null);
@@ -32,6 +33,7 @@ function BlogDetail({ slug }) {
   if (!post) {
     return (
       <div className="py-20 text-center space-y-3">
+        <SEO title="Article not found" path={`/blog/${slug}`} noindex />
         <p className="text-navy-500">This article couldn't be found.</p>
         <Link
           to="/blog"
@@ -43,8 +45,43 @@ function BlogDetail({ slug }) {
     );
   }
 
+  const postImage = post.imageUrl
+    ? resolveImageUrl(post.imageUrl)
+    : DEFAULT_OG_IMAGE;
+  const description =
+    post.excerpt ||
+    (post.content ? post.content.slice(0, 160) : undefined) ||
+    `${post.title} — Swastik College blog.`;
+
   return (
     <article className="max-w-3xl mx-auto py-12 px-4 sm:px-6">
+      <SEO
+        title={post.title}
+        description={description}
+        path={`/blog/${post.slug || slug}`}
+        image={postImage}
+        type="article"
+        keywords={`${post.title}, ${post.category || ""}, Swastik College blog`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          image: postImage,
+          datePublished: post.createdAt,
+          author: post.author
+            ? { "@type": "Person", name: post.author }
+            : undefined,
+          publisher: {
+            "@type": "Organization",
+            name: "Swastik College",
+            logo: {
+              "@type": "ImageObject",
+              url: `${SITE_URL}/swastik%20logo.png`,
+            },
+          },
+          mainEntityOfPage: `${SITE_URL}/blog/${post.slug || slug}`,
+        }}
+      />
       <Link
         to="/blog"
         className="text-sm text-navy-500 hover:text-marigold-600 inline-flex items-center gap-1 mb-6"
@@ -123,6 +160,12 @@ export default function Blog() {
 
   return (
     <div className="py-12 px-4 sm:px-6 max-w-7xl mx-auto space-y-10">
+      <SEO
+        title="Blog — College Journal & Insights"
+        description="Articles, tech guides, campus news and project showcases written by Swastik College faculty and students."
+        path="/blog"
+        keywords="Swastik College blog, Swastik College news, Swastik College articles"
+      />
       {/* Header Banner */}
       <Section page="blog" section="hero">
         <div className="text-center space-y-3">

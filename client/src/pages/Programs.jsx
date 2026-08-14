@@ -4,6 +4,7 @@ import { ArrowUpRight, Clock, Users, Award } from "lucide-react";
 import { getCourses } from "../api/client";
 import { Section } from "../components/Visibility";
 import Reveal from "../components/Reveal";
+import SEO from "../components/SEO";
 
 export default function Programs() {
   const [programs, setPrograms] = useState([]);
@@ -14,6 +15,12 @@ export default function Programs() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <SEO
+        title="Academic Programs — BSc. CSIT & BCA College in Kathmandu, Nepal"
+        description="Explore Swastik College's TU-affiliated academic programs: BSc. CSIT and BCA, each with semester-wise curriculum, entrance requirements and downloadable syllabus."
+        path="/programs"
+        keywords="BSc CSIT Nepal, BCA Nepal, Nepal, Swastik College programs, TU affiliated programs"
+      />
       {/* Page Header */}
       <Section page="programs" section="hero">
         <p className="font-mono text-xs tracking-[0.2em] text-[#D9383A] dark:text-blue-400 uppercase mb-2 font-semibold">
