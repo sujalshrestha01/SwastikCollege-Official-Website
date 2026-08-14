@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Edit2, Search } from "lucide-react";
+import RichEditor from "../../components/RichEditor";
 import {
   Card,
   Field,
@@ -203,11 +204,10 @@ export default function AdminBlog() {
             </Field>
 
             <Field label="Full Content">
-              <Textarea
-                rows={8}
+              <RichEditor
                 value={currentPost.content}
-                onChange={(e) =>
-                  setCurrentPost({ ...currentPost, content: e.target.value })
+                onChange={(content) =>
+                  setCurrentPost({ ...currentPost, content })
                 }
                 placeholder="Write full article here..."
               />
