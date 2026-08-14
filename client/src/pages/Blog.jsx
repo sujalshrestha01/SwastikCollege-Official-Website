@@ -50,7 +50,9 @@ function BlogDetail({ slug }) {
     : DEFAULT_OG_IMAGE;
   const description =
     post.excerpt ||
-    (post.content ? post.content.slice(0, 160) : undefined) ||
+    (post.content
+      ? post.content.replace(/<[^>]*>/g, "").slice(0, 160)
+      : undefined) ||
     `${post.title} — Swastik College blog.`;
 
   return (
@@ -115,12 +117,19 @@ function BlogDetail({ slug }) {
           </span>
         )}
       </div>
-      <h1 className="font-display text-3xl sm:text-4xl font-bold text-navy-900 dark:text-paper mb-6">
+      <h1 className="font-display text-3xl sm:text-4xl font-bold text-navy-900 dark:text-paper mb-4">
         {post.title}
       </h1>
+
+      {post.excerpt && (
+        <p className="text-lg sm:text-xl text-navy-600 dark:text-navy-300 leading-8 mb-8">
+          {post.excerpt}
+        </p>
+      )}
+
       <div
-        className="blog-content max-w-none text-navy-700 dark:text-navy-200 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: post.content || "" }}
       />
     </article>
   );
