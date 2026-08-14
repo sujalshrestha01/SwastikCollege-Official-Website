@@ -118,9 +118,10 @@ function BlogDetail({ slug }) {
       <h1 className="font-display text-3xl sm:text-4xl font-bold text-navy-900 dark:text-paper mb-6">
         {post.title}
       </h1>
-      <div className="prose prose-navy dark:prose-invert max-w-none text-navy-700 dark:text-navy-200 whitespace-pre-line leading-relaxed">
-        {post.content}
-      </div>
+      <div
+        className="blog-content max-w-none text-navy-700 dark:text-navy-200 leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
     </article>
   );
 }
