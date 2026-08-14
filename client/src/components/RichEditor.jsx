@@ -9,6 +9,7 @@ export default function RichEditor({ value, onChange }) {
       init={{
         height: 400,
         menubar: true,
+        elementpath: false,
         plugins: [
           "advlist",
           "autolink",
