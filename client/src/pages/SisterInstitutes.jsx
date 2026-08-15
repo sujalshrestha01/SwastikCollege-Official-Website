@@ -58,7 +58,7 @@ export default function SisterInstitutes() {
 
             <div className="pt-2">
               <a
-                href="#college-learn-more"
+                href="https://www.nepalmegacollege.edu.np/"
                 className="inline-block bg-[#D9383A] dark:bg-[#3B82F6] hover:bg-[#c22e30] dark:hover:bg-blue-600 text-white font-medium text-sm sm:text-base px-6 py-2.5 rounded shadow-md hover:shadow-lg transition-all duration-200"
               >
                 Learn more
@@ -96,7 +96,7 @@ export default function SisterInstitutes() {
 
             <div className="pt-2">
               <a
-                href="#school-learn-more"
+                href="https://www.nepalmegacollege.edu.np/"
                 className="inline-block bg-[#D9383A] dark:bg-[#3B82F6] hover:bg-[#c22e30] dark:hover:bg-blue-600 text-white font-medium text-sm sm:text-base px-6 py-2.5 rounded shadow-md hover:shadow-lg transition-all duration-200"
               >
                 Learn more
