@@ -61,7 +61,7 @@ export default function WhyChooseUs() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-[#D9383A] dark:text-[#3B82F6]">
-            Excellence in Education
+            Academic Excellence
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mt-2">
             Why{" "}
