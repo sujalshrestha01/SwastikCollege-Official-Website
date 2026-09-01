@@ -1,7 +1,3 @@
-{
-  /* later changed to investment partners from placement partners */
-}
-
 import { useEffect, useState } from "react";
 import { getPlacementPartners, resolveImageUrl } from "../api/client";
 

@@ -25,13 +25,23 @@ function StatusBadge({ status }) {
 }
 
 function RoleBadge({ role }) {
+  const labels = {
+    superadmin: 'Superadmin',
+    editor: 'Editor',
+    qaaVerifier: 'QAA Verifier',
+  };
+  const styles = {
+    superadmin: 'bg-marigold-100 text-marigold-700',
+    editor: 'bg-navy-100 text-navy-700',
+    qaaVerifier: 'bg-blue-100 text-blue-700',
+  };
   return (
     <span
       className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-        role === 'superadmin' ? 'bg-marigold-100 text-marigold-700' : 'bg-navy-100 text-navy-700'
+        styles[role] || styles.editor
       }`}
     >
-      {role === 'superadmin' ? 'Superadmin' : 'Editor'}
+      {labels[role] || 'Editor'}
     </span>
   );
 }
@@ -172,6 +182,7 @@ function InvitePanel({ onInvited }) {
             <Select value={role} onChange={(e) => setRole(e.target.value)}>
               <option value="editor">Editor</option>
               <option value="superadmin">Superadmin</option>
+              <option value="qaaVerifier">QAA Verifier (external, restricted)</option>
             </Select>
           </Field>
         </div>
@@ -244,6 +255,7 @@ function AdminRow({ item, currentAdminId, onChanged }) {
           <Select value={item.role} onChange={handleRoleChange} disabled={busy} className="text-xs py-1.5">
             <option value="editor">Editor</option>
             <option value="superadmin">Superadmin</option>
+            <option value="qaaVerifier">QAA Verifier</option>
           </Select>
         )}
         {item.status === 'pending' && (

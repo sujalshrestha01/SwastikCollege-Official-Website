@@ -163,15 +163,6 @@ export const notices = [
       "The central library will remain open until 9 PM on weekdays throughout the examination period.",
     fileUrl: "/notices/library-hours.pdf",
   },
-  {
-    id: "n6",
-    title: "BBS First Semester Admission — Second Phase",
-    category: "Admissions",
-    date: "2026-06-28",
-    excerpt:
-      "A limited number of seats remain open for BBS first semester. Apply before the phase-two deadline.",
-    fileUrl: "/notices/bbs-second-phase.pdf",
-  },
 ];
 
 export const newsEvents = [
@@ -213,9 +204,9 @@ export const testimonials = [
   {
     id: "t3",
     name: "Prakriti Gurung",
-    role: "BBS, Batch 2021",
+    role: "BSc. CSIT, Batch 2021",
     quote:
-      "I built my first business plan here and pitched it at the annual fest two years later.",
+      "The faculty pushed me to present my final year project at a national conference — that changed the direction of my career.",
   },
 ];
 

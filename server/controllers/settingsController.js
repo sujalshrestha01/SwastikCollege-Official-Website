@@ -86,6 +86,27 @@ export const VISIBILITY_SCHEMA = {
       list: "Downloads List",
     },
   },
+  research: {
+    label: "Research",
+    sections: {
+      authorGuidelines: "Author Guidelines",
+      callForPapers: "Call for Paper",
+      journals: "Journals",
+    },
+  },
+  qaa: {
+    label: "Quality Assurance & Accreditation (QAA)",
+    sections: {
+      hero: "Page Content (Reviewer Login Gate)",
+    },
+  },
+  publications: {
+    label: "Publications",
+    sections: {
+      hero: "Page Hero",
+      list: "Publications List",
+    },
+  },
   contact: {
     label: "Contact",
     sections: {

@@ -17,6 +17,11 @@ import Gallery from "./pages/Gallery";
 import About from "./pages/About";
 import Faculty from "./pages/Faculty";
 import Blog from "./pages/Blog"; // Public Blog Page
+import AuthorGuidelines from "./pages/AuthorGuidelines";
+import CallForPaper from "./pages/CallForPaper";
+import Journals from "./pages/Journals";
+import Publications from "./pages/Publications";
+import Qaa from "./pages/Qaa";
 import NotFound from "./pages/NotFound";
 
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -43,6 +48,11 @@ import AdminAcademics from "./pages/admin/AdminAcademics";
 import AdminFAQ from "./pages/admin/AdminFAQ";
 import AdminLiveChat from "./pages/admin/AdminLiveChat";
 import AdminKnowledgeBase from "./pages/admin/AdminKnowledgeBase";
+import AdminAuthorGuidelines from "./pages/admin/AdminAuthorGuidelines";
+import AdminCallForPapers from "./pages/admin/AdminCallForPapers";
+import AdminJournals from "./pages/admin/AdminJournals";
+import AdminPublications from "./pages/admin/AdminPublications";
+import AdminQaa from "./pages/admin/AdminQaa";
 import NonCreditCourses from "./pages/NonCreditCourses";
 import { PageGate } from "./components/Visibility";
 
@@ -140,6 +150,46 @@ function PublicSite() {
               </PageGate>
             }
           />
+          <Route
+            path="/research/author-guidelines"
+            element={
+              <PageGate page="research">
+                <AuthorGuidelines />
+              </PageGate>
+            }
+          />
+          <Route
+            path="/research/call-for-paper"
+            element={
+              <PageGate page="research">
+                <CallForPaper />
+              </PageGate>
+            }
+          />
+          <Route
+            path="/research/journals"
+            element={
+              <PageGate page="research">
+                <Journals />
+              </PageGate>
+            }
+          />
+          <Route
+            path="/publications"
+            element={
+              <PageGate page="publications">
+                <Publications />
+              </PageGate>
+            }
+          />
+          <Route
+            path="/qaa"
+            element={
+              <PageGate page="qaa">
+                <Qaa />
+              </PageGate>
+            }
+          />
 
           {/* Blog visibility respects both the legacy quick-toggle and the generic
               page visibility engine, so either one hides the page. */}
@@ -200,6 +250,17 @@ export default function App() {
               <Route path="faq" element={<AdminFAQ />} />
               <Route path="live-chat" element={<AdminLiveChat />} />
               <Route path="knowledge-base" element={<AdminKnowledgeBase />} />
+              <Route
+                path="author-guidelines"
+                element={<AdminAuthorGuidelines />}
+              />
+              <Route
+                path="call-for-papers"
+                element={<AdminCallForPapers />}
+              />
+              <Route path="journals" element={<AdminJournals />} />
+              <Route path="publications" element={<AdminPublications />} />
+              <Route path="qaa" element={<AdminQaa />} />
               <Route path="visibility" element={<AdminVisibility />} />
               <Route path="settings" element={<AdminSettings />} />
               <Route path="users" element={<AdminUsers />} />

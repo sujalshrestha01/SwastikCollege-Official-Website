@@ -126,10 +126,11 @@ export async function inviteAdmin(req, res) {
     const inviteToken = crypto.randomBytes(32).toString("hex");
     const inviteTokenExpires = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 hours
 
+    const validRoles = ["superadmin", "editor", "qaaVerifier"];
     const invited = await Admin.create({
       name,
       email: normalizedEmail,
-      role: role === "superadmin" ? "superadmin" : "editor",
+      role: validRoles.includes(role) ? role : "editor",
       status: "pending",
       inviteToken,
       inviteTokenExpires,
@@ -332,10 +333,10 @@ export async function updateAdminRole(req, res) {
     if (!requireSuperadmin(req, res)) return;
 
     const { role } = req.body;
-    if (!["superadmin", "editor"].includes(role)) {
+    if (!["superadmin", "editor", "qaaVerifier"].includes(role)) {
       return res
         .status(400)
-        .json({ message: "Role must be superadmin or editor" });
+        .json({ message: "Role must be superadmin, editor, or qaaVerifier" });
     }
     if (req.params.id === req.admin.id) {
       return res
@@ -346,7 +347,7 @@ export async function updateAdminRole(req, res) {
     const target = await Admin.findById(req.params.id);
     if (!target) return res.status(404).json({ message: "Admin not found" });
 
-    if (target.role === "superadmin" && role === "editor") {
+    if (target.role === "superadmin" && role !== "superadmin") {
       const superadminCount = await Admin.countDocuments({
         role: "superadmin",
       });

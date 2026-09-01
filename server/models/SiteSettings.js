@@ -22,7 +22,7 @@ const siteSettingsSchema = new mongoose.Schema(
     heroSubheadline: {
       type: String,
       default:
-        "A TU-affiliated college offering BSc. CSIT, BCA and BBS programs, built around small classes and real project experience.",
+        "A TU-affiliated college offering BSc. CSIT and BCA programs, built around small classes and real project experience.",
     },
     heroImageUrl: { type: String, default: "" },
     heroCtaText: { type: String, default: "Explore Programs" },

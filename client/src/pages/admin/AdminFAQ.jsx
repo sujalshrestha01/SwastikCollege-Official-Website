@@ -90,7 +90,7 @@ export default function AdminFAQ() {
               onChange={(e) =>
                 setEditing({ ...editing, answer: e.target.value })
               }
-              placeholder="We offer BSc. CSIT, BCA and BBS, all affiliated with Tribhuvan University."
+              placeholder="We offer BSc. CSIT and BCA, all affiliated with Tribhuvan University."
             />
           </Field>
           <Field label="Display order" className="mt-4 max-w-[160px]">

@@ -9,7 +9,11 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
 import { initChatSocket } from "./sockets/chatSocket.js";
+import { restrictQaaVerifier } from "./middleware/restrictQaaVerifier.js";
 import authRouter from "./routes/auth.js";
+import qaaRouter from "./routes/qaa.js";
+import researchRouter from "./routes/research.js";
+import publicationsRouter from "./routes/publications.js";
 import settingsRouter from "./routes/settings.js";
 import noticesRouter from "./routes/notices.js";
 import downloadsRouter from "./routes/downloads.js";
@@ -50,6 +54,11 @@ app.use(
 );
 
 app.use(express.json({ limit: "5mb" }));
+
+// Must run before any route is mounted so a qaaVerifier token is blocked
+// from every endpoint except /api/auth and /api/qaa, no matter which
+// router would otherwise have handled the request.
+app.use(restrictQaaVerifier);
 
 app.use(
   "/api",
@@ -96,6 +105,9 @@ app.use("/api/faqs", faqRouter);
 app.use("/api/knowledge", knowledgeRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/admin-push", adminPushRouter);
+app.use("/api/qaa", qaaRouter);
+app.use("/api/research", researchRouter);
+app.use("/api/publications", publicationsRouter);
 
 // 404 handler for unknown API routes
 app.use("/api", (req, res) => {

@@ -50,13 +50,6 @@ const notices = [
     excerpt: 'The central library will remain open until 9 PM on weekdays throughout the examination period.',
     fileUrl: '/notices/library-hours.pdf',
   },
-  {
-    title: 'BBS First Semester Admission — Second Phase',
-    category: 'Admissions',
-    date: new Date('2026-06-28'),
-    excerpt: 'A limited number of seats remain open for BBS first semester. Apply before the phase-two deadline.',
-    fileUrl: '/notices/bbs-second-phase.pdf',
-  },
 ];
 
 const courses = [
@@ -150,29 +143,6 @@ const courses = [
     ],
     syllabusUrl: '/syllabus/bca.pdf',
   },
-  {
-    slug: 'bbs',
-    name: 'BBS',
-    tagline: 'Bachelor of Business Studies',
-    duration: '4 years · 8 semesters',
-    seats: 60,
-    order: 3,
-    description:
-      'A foundational management degree covering accounting, economics and organizational behaviour for future business leaders.',
-    eligibility: ['Completed +2 / A-Level in any stream', 'Minimum second division or GPA 2.0 in +2'],
-    semesters: [
-      {
-        title: 'Semester I',
-        subjects: [
-          { name: 'Principles of Management', code: 'MGT201', creditHours: 3 },
-          { name: 'Business English', code: 'ENG201', creditHours: 3 },
-          { name: 'Microeconomics', code: 'ECO201', creditHours: 3 },
-          { name: 'Business Mathematics', code: 'MTH201', creditHours: 3 },
-        ],
-      },
-    ],
-    syllabusUrl: '/syllabus/bbs.pdf',
-  },
 ];
 
 const faculty = [
@@ -242,8 +212,8 @@ const testimonials = [
   },
   {
     name: 'Prakriti Gurung',
-    role: 'BBS, Batch 2021',
-    quote: 'I built my first business plan here and pitched it at the annual fest two years later.',
+    role: 'BSc. CSIT, Batch 2021',
+    quote: 'The faculty pushed me to present my final year project at a national conference — that changed the direction of my career.',
     order: 3,
   },
 ];
@@ -257,7 +227,7 @@ const siteSettingsData = {
   affiliation: 'Tribhuvan University (TU)',
   heroHeadline: 'Shaping Careers, Building Futures',
   heroSubheadline:
-    'A TU-affiliated college offering BSc. CSIT, BCA and BBS programs, built around small classes and real project experience.',
+    'A TU-affiliated college offering BSc. CSIT and BCA programs, built around small classes and real project experience.',
   heroCtaText: 'Explore Programs',
   heroCtaLink: '/programs',
   aboutSummary:
@@ -331,7 +301,7 @@ async function seed() {
 
   await Faq.insertMany([
     { question: 'What programs do you offer?', order: 1,
-      answer: 'We offer TU-affiliated BSc. CSIT, BCA and BBS programs, plus non-credit certification courses and live workshops. Check the Academics page for full details.' },
+      answer: 'We offer TU-affiliated BSc. CSIT and BCA programs, plus non-credit certification courses and live workshops. Check the Academics page for full details.' },
     { question: 'How do I apply for admission?', order: 2,
       answer: "Use the Contact page's admission inquiry form, or message us here in chat, and the admissions office will follow up by email within two working days." },
     { question: 'Where is the campus located?', order: 3,

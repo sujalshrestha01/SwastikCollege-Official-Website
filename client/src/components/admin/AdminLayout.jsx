@@ -28,6 +28,7 @@ import {
   Database,
   UserCheck,
   UserX,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { Switch } from "./Ui";
@@ -44,7 +45,7 @@ import { getAdminSocket } from "../../api/chatSocket";
 // Grouped, collapsible sidebar navigation — mirrors how most professional
 // admin panels (Shopify, WordPress, etc.) organize a growing list of screens
 // into logical categories instead of one long flat list.
-const navGroups = [
+const FULL_NAV_GROUPS = [
   {
     items: [
       { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -71,6 +72,25 @@ const navGroups = [
         icon: Sparkles,
       },
       { to: "/admin/faculty", label: "Faculty", icon: Users },
+    ],
+  },
+  {
+    label: "Research & QAA",
+    icon: FileText,
+    items: [
+      {
+        to: "/admin/author-guidelines",
+        label: "Author Guidelines",
+        icon: FileText,
+      },
+      {
+        to: "/admin/call-for-papers",
+        label: "Call for Paper",
+        icon: FileText,
+      },
+      { to: "/admin/journals", label: "Journals", icon: BookOpen },
+      { to: "/admin/publications", label: "Publications", icon: FileText },
+      { to: "/admin/qaa", label: "QAA Documents", icon: ShieldCheck },
     ],
   },
   {
@@ -111,6 +131,17 @@ const navGroups = [
   },
 ];
 
+// A qaaVerifier account (see ProtectedRoute.jsx / server restrictQaaVerifier.js)
+// is locked to a single screen — the sidebar reflects that directly instead
+// of showing a full menu that would just bounce them back on click.
+const QAA_ONLY_NAV_GROUPS = [
+  {
+    items: [
+      { to: "/admin/qaa", label: "QAA Documents", icon: ShieldCheck, end: true },
+    ],
+  },
+];
+
 function isGroupActive(group, pathname) {
   return group.items.some((item) =>
     item.end ? pathname === item.to : pathname.startsWith(item.to),
@@ -121,6 +152,8 @@ function SidebarContent({ onNavigate }) {
   const { admin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const navGroups =
+    admin?.role === "qaaVerifier" ? QAA_ONLY_NAV_GROUPS : FULL_NAV_GROUPS;
 
   const [openGroups, setOpenGroups] = useState(() =>
     Object.fromEntries(
@@ -293,12 +326,12 @@ function SidebarContent({ onNavigate }) {
 
 // "Available" and "Notifications" toggles for live-chat handoff — see
 // server/sockets/chatSocket.js for what each one controls server-side.
-function LiveChatStatusControls() {
+function LiveChatStatusControls({ hidden }) {
   const { admin, updateAdmin } = useAuth();
   const [busy, setBusy] = useState(null); // "available" | "notifications" | null
   const [notice, setNotice] = useState("");
 
-  if (!admin) return null;
+  if (!admin || hidden) return null;
 
   async function toggleAvailable(next) {
     setBusy("available");
@@ -399,6 +432,11 @@ export default function AdminLayout() {
   const [pushWarning, setPushWarning] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  // A qaaVerifier account is outside the live-chat admin pool entirely —
+  // it has no "available"/notifications preferences to manage, and the
+  // server already rejects /api/admin-push/* for this role (see
+  // restrictQaaVerifier.js), so none of that machinery should even run here.
+  const isQaaVerifier = admin?.role === "qaaVerifier";
 
   // Close the mobile drawer whenever the route changes.
   useEffect(() => {
@@ -409,27 +447,27 @@ export default function AdminLayout() {
   // catches any staleness however it happened. Silently repairs when it
   // can; surfaces a real warning when it can't (permission blocked).
   useEffect(() => {
-    if (!admin?.notificationsEnabled) {
+    if (isQaaVerifier || !admin?.notificationsEnabled) {
       setPushWarning(false);
       return;
     }
     checkPushHealth().then((result) => {
       setPushWarning(result.status === "blocked");
     });
-  }, [admin?.notificationsEnabled]);
+  }, [admin?.notificationsEnabled, isQaaVerifier]);
 
   // Register the service worker once on login so it's ready to receive
   // push events even before the admin has toggled Notifications on.
   useEffect(() => {
-    if (admin) registerServiceWorker();
-  }, [admin]);
+    if (admin && !isQaaVerifier) registerServiceWorker();
+  }, [admin, isQaaVerifier]);
 
   // In-app alert: every connected admin socket auto-joins the shared inbox
   // room, so this fires for every logged-in admin regardless of which page
   // they're on — covers the "browser open but tab not focused on chat" case
   // alongside push notifications for the fully-closed-tab case.
   useEffect(() => {
-    if (!admin) return;
+    if (!admin || isQaaVerifier) return;
     const socket = getAdminSocket();
     function handleEscalation(item) {
       if (!admin.notificationsEnabled) return;
@@ -448,14 +486,14 @@ export default function AdminLayout() {
       socket.off("admin:escalation", handleEscalation);
       socket.off("admin:alert", handleEscalation);
     };
-  }, [admin]);
+  }, [admin, isQaaVerifier]);
 
   // Live cross-device sync: if this admin toggles "Available" or
   // "Notifications" on another device (or another tab), reflect it here
   // instantly — no refresh, no re-login. See notifyAdminPreferencesChanged
   // in server/sockets/chatSocket.js for the broadcast side.
   useEffect(() => {
-    if (!admin) return;
+    if (!admin || isQaaVerifier) return;
     const socket = getAdminSocket();
     function handlePreferencesUpdated(partial) {
       updateAdmin(partial);
@@ -464,7 +502,7 @@ export default function AdminLayout() {
     return () => {
       socket.off("admin:preferences_updated", handlePreferencesUpdated);
     };
-  }, [admin, updateAdmin]);
+  }, [admin, updateAdmin, isQaaVerifier]);
 
   useEffect(() => {
     if (!alert) return;
@@ -507,7 +545,7 @@ export default function AdminLayout() {
               {admin?.name} · {admin?.role}
             </p>
           </div>
-          <LiveChatStatusControls />
+          <LiveChatStatusControls hidden={isQaaVerifier} />
         </header>
         {pushWarning && (
           <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 shadow-sm flex items-start gap-3 shrink-0">

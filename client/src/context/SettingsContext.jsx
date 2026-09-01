@@ -16,7 +16,7 @@ const defaultSettings = {
   logoUrl: "",
   heroHeadline: "Shaping Careers, Building Futures",
   heroSubheadline:
-    "A TU-affiliated college offering BSc. CSIT, BCA and BBS programs, built around small classes and real project experience.",
+    "A TU-affiliated college offering BSc. CSIT and BCA programs, built around small classes and real project experience.",
   heroImageUrl: "",
   heroImages: [],
   heroCtaText: "Explore Programs",

@@ -191,6 +191,23 @@ export function getGalleryEvents() {
 export function getGalleryEvent(id) {
   return safeFetch(`/gallery/${id}`, null);
 }
+// ---------- Research / QAA / Publications (public reads) ----------
+export function getAuthorGuidelines() {
+  return safeFetch("/research/author-guidelines", { content: "", files: [] });
+}
+export function getCallForPapers() {
+  return safeFetch("/research/call-for-papers", []);
+}
+export function getJournals() {
+  return safeFetch("/research/journals", []);
+}
+export function getPublications() {
+  return safeFetch("/publications", []);
+}
+// Note: QAA documents are intentionally NOT exposed here — that list now
+// requires login (server/routes/qaa.js requires requireAuth on GET too), so
+// there is no public/unauthenticated read for it. See pages/Qaa.jsx, which
+// shows a login gate instead of fetching anything.
 export function submitContactForm(payload) {
   return safeFetch(
     "/contact",
@@ -314,6 +331,31 @@ export const eventsAdmin = makeCrud("events");
 export const testimonialsAdmin = makeCrud("testimonials");
 export const placementPartnersAdmin = makeCrud("placement-partners");
 export const galleryAdmin = makeCrud("gallery");
+export const callForPapersAdmin = makeCrud("research/call-for-papers");
+export const journalsAdmin = makeCrud("research/journals");
+export const publicationsAdmin = makeCrud("publications");
+
+// Author Guidelines is a singleton (like Settings), not a list — its own
+// pair of calls rather than the makeCrud() list helper.
+export function getAuthorGuidelinesAdmin() {
+  return apiCall("/research/author-guidelines");
+}
+export function updateAuthorGuidelines(payload) {
+  return apiCall("/research/author-guidelines", {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+// QAA — standard CRUD for regular admins, plus a dedicated verify call that
+// a qaaVerifier account is also allowed to make.
+export const qaaAdmin = makeCrud("qaa");
+export function verifyQaaDocument(id, status) {
+  return apiCall(`/qaa/${id}/verify`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
 
 export const coursesAdmin = {
   list: () => apiCall("/courses?all=true"),

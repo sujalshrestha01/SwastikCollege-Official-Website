@@ -21,14 +21,26 @@ import { uploadImage, resolveImageUrl } from "../../api/client";
  *              upload, or '' when removed
  *  - label / hint: optional field chrome
  *  - accept: input accept attribute (default 'application/pdf,image/*')
+ *  - allowWord: also accept .doc/.docx (used by Research/QAA uploads)
  */
+const WORD_MIMETYPES = [
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
 export default function FileUpload({
   value,
   onChange,
   label,
   hint,
-  accept = "application/pdf,image/*",
+  accept,
+  allowWord = false,
 }) {
+  const resolvedAccept =
+    accept ??
+    (allowWord
+      ? "application/pdf,image/*,.doc,.docx"
+      : "application/pdf,image/*");
   const inputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -36,13 +48,19 @@ export default function FileUpload({
 
   function isAllowed(file) {
     if (!file) return false;
-    return file.type === "application/pdf" || file.type.startsWith("image/");
+    if (file.type === "application/pdf" || file.type.startsWith("image/"))
+      return true;
+    return allowWord && WORD_MIMETYPES.includes(file.type);
   }
 
   async function handleFile(file) {
     if (!file) return;
     if (!isAllowed(file)) {
-      setError("Please choose a PDF or image file");
+      setError(
+        allowWord
+          ? "Please choose a PDF, Word document, or image file"
+          : "Please choose a PDF or image file",
+      );
       return;
     }
     setError("");
@@ -68,7 +86,7 @@ export default function FileUpload({
     handleFile(e.dataTransfer.files?.[0]);
   }
 
-  const isPdf = value && /\.pdf($|\?)/i.test(value);
+  const isDocument = value && /\.(pdf|docx?)($|\?)/i.test(value);
   const fileName = value ? value.split("/").pop() : "";
 
   return (
@@ -82,7 +100,7 @@ export default function FileUpload({
       {value ? (
         <div className="flex items-center gap-3 rounded-xl border border-navy-100 bg-navy-50/60 px-3 py-2.5">
           <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-navy-100 text-navy-500">
-            {isPdf ? <FileText size={18} /> : <FileImage size={18} />}
+            {isDocument ? <FileText size={18} /> : <FileImage size={18} />}
           </div>
           <a
             href={resolveImageUrl(value)}
@@ -152,7 +170,9 @@ export default function FileUpload({
             <span className="text-xs font-medium px-2 text-center">
               {uploading
                 ? "Uploading…"
-                : "Drag & drop a PDF or image here, or click to choose from your device"}
+                : allowWord
+                  ? "Drag & drop a PDF, Word doc, or image here, or click to choose from your device"
+                  : "Drag & drop a PDF or image here, or click to choose from your device"}
             </span>
           </button>
         </div>
@@ -161,7 +181,7 @@ export default function FileUpload({
       <input
         ref={inputRef}
         type="file"
-        accept={accept}
+        accept={resolvedAccept}
         className="hidden"
         onChange={handleInputChange}
       />

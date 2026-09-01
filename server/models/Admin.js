@@ -14,7 +14,15 @@ const adminSchema = new mongoose.Schema(
     // Not required at creation time — an invited admin has no password
     // until they accept the invite and set one.
     password: { type: String, required: false },
-    role: { type: String, enum: ["superadmin", "editor"], default: "editor" },
+    // "qaaVerifier" is a deliberately narrow role: an externally-issued
+    // login (superadmin-created only) that can view QAA documents and mark
+    // them verified, and nothing else — see server/middleware/restrictQaaVerifier.js
+    // for the server-side enforcement of that boundary.
+    role: {
+      type: String,
+      enum: ["superadmin", "editor", "qaaVerifier"],
+      default: "editor",
+    },
     status: { type: String, enum: ["pending", "active"], default: "active" },
     inviteToken: { type: String, select: false },
     inviteTokenExpires: { type: Date, select: false },
