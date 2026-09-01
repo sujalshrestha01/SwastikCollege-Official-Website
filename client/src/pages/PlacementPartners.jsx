@@ -1,3 +1,7 @@
+{
+  /* later changed to investment partners from placement partners */
+}
+
 import { useEffect, useState } from "react";
 import { getPlacementPartners, resolveImageUrl } from "../api/client";
 
@@ -23,12 +27,12 @@ export default function PlacementPartners() {
       <h2 className="text-2xl sm:text-3xl font-serif text-slate-800 dark:text-white tracking-tight font-medium">
         Our{" "}
         <span className="text-[#D9383A] dark:text-[#3B82F6] font-bold">
-          Placement Partners
+          Investment Partners
         </span>
       </h2>
       <p className="text-xs sm:text-sm text-slate-500 dark:text-navy-100 mt-2 font-sans leading-relaxed">
-        Collaborating with industry leaders to provide direct career
-        pathways for our graduates.
+        Collaborating with industry leaders to provide direct career pathways
+        for our graduates.
       </p>
     </>
   );
@@ -78,9 +82,7 @@ export default function PlacementPartners() {
         // More partners: centered heading up top, uniform grid below — a
         // side-by-side row would get cramped past a handful of logos.
         <div className="max-w-5xl mx-auto text-center">
-          <div className="max-w-md mx-auto">
-            {titleBlock}
-          </div>
+          <div className="max-w-md mx-auto">{titleBlock}</div>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 items-center justify-items-center max-w-3xl mx-auto">
             {partners.map(renderCard)}
           </div>

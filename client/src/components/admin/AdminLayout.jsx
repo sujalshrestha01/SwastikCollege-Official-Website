@@ -81,7 +81,7 @@ const navGroups = [
       { to: "/admin/testimonials", label: "Testimonials", icon: Quote },
       {
         to: "/admin/placement-partners",
-        label: "Placement Partners",
+        label: "Investment Partners",
         icon: Handshake,
       },
     ],

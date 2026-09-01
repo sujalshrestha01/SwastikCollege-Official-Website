@@ -116,7 +116,7 @@ export default function AdminPlacementPartners() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl text-navy-800">
-          Placement Partners
+          Investment Partners
         </h1>
         <Button
           onClick={() => {
