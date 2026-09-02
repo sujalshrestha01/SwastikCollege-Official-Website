@@ -39,7 +39,7 @@ export function Field({ label, children, hint, className = "" }) {
 }
 
 export const inputCls =
-  "w-full rounded-lg border border-navy-200 px-3 py-2 text-sm text-navy-800 focus:outline-none focus:ring-2 focus:ring-marigold-400 focus:border-transparent";
+  "w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-sm text-navy-800 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-marigold-400 focus:border-transparent";
 
 export function Input(props) {
   return (
