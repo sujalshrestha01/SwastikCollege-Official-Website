@@ -218,10 +218,11 @@ export default function Footer() {
               Office Hours
             </h4>
             <p className="text-sm font-mono">{settings.officeHours}</p>
-            <div className="flex items-center gap-2 mt-5 text-xs text-teal-300">
+            {/* Tribhuvan University(TU).Recognized == REMOVED */}
+            {/* <div className="flex items-center gap-2 mt-5 text-xs text-teal-300">
               <ShieldCheck size={15} />
               {settings.affiliation} · Recognized
-            </div>
+            </div> */}
           </div>
         </div>
 
