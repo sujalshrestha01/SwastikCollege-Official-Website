@@ -13,6 +13,12 @@ const callForPaperSchema = new mongoose.Schema(
       default: "open",
     },
     fileUrl: { type: String, default: "" }, // optional attached PDF/Word notice
+    files: [
+      {
+        name: { type: String, default: "" },
+        fileUrl: { type: String, default: "" },
+      },
+    ], // optional downloadable templates/checklists for this call
     order: { type: Number, default: 0 },
   },
   { timestamps: true },
