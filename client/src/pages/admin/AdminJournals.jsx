@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, Pencil, X, Save, FileText, FileImage } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Pencil,
+  X,
+  Save,
+  FileText,
+  FileImage,
+} from "lucide-react";
 import { journalsAdmin } from "../../api/client";
 import {
   Card,
@@ -15,6 +23,8 @@ import FileUpload from "../../components/admin/FileUpload";
 
 const empty = () => ({
   title: "",
+  journalName: "",
+  authors: "",
   issueNumber: "",
   publishedYear: "",
   description: "",
@@ -93,7 +103,31 @@ export default function AdminJournals() {
                 onChange={(e) =>
                   setEditing({ ...editing, title: e.target.value })
                 }
-                placeholder="e.g. 'Swastik Journal of Applied Sciences'"
+                placeholder="e.g. 'Leveraging Machine Learning Algorithms for Prediction of Chronic Kidney Disease'"
+              />
+            </Field>
+            <Field
+              label="Journal Name"
+              hint="The publishing journal, shown on the left of the listing"
+            >
+              <Input
+                value={editing.journalName}
+                onChange={(e) =>
+                  setEditing({ ...editing, journalName: e.target.value })
+                }
+                placeholder="e.g. 'Journal of Clinical Research and Case Studies'"
+              />
+            </Field>
+            <Field
+              label="Authors"
+              hint="Comma-separated list, shown above the title"
+            >
+              <Input
+                value={editing.authors}
+                onChange={(e) =>
+                  setEditing({ ...editing, authors: e.target.value })
+                }
+                placeholder="e.g. 'Saugat Kafle, Ravi Shankar Sah, Smriti KC and Sudip Raj Khadka'"
               />
             </Field>
             <div className="grid grid-cols-2 gap-4">
@@ -191,11 +225,18 @@ export default function AdminJournals() {
                     </div>
                     <div className="min-w-0">
                       <span className="text-xs uppercase tracking-wide text-marigold-500 font-semibold">
-                        {item.issueNumber || item.publishedYear}
+                        {item.journalName ||
+                          item.issueNumber ||
+                          item.publishedYear}
                       </span>
                       <h3 className="font-display text-navy-800 truncate">
                         {item.title}
                       </h3>
+                      {item.authors && (
+                        <p className="text-xs text-navy-400 truncate">
+                          {item.authors}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">

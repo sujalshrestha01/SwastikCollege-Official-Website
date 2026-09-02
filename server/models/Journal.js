@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 const journalSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    journalName: { type: String, default: "" }, // e.g. "Journal of Clinical Research and Case Studies"
+    authors: { type: String, default: "" }, // e.g. "Saugat Kafle, Ravi Shankar Sah, Smriti KC and Sudip Raj Khadka"
     issueNumber: { type: String, default: "" }, // e.g. "Vol. 3, Issue 1"
     publishedYear: { type: String, default: "" },
     description: { type: String, default: "" },
