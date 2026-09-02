@@ -46,51 +46,57 @@ export default function AuthorGuidelines() {
           Author Guidelines
         </h1>
 
-        {doc.content ? (
-          <div
-            className="blog-content"
-            dangerouslySetInnerHTML={{ __html: doc.content }}
-          />
-        ) : (
-          <p className="text-sm text-navy-400 dark:text-navy-300">
-            Guidelines will be published here soon.
-          </p>
-        )}
+        <div className="p-5 sm:p-8 rounded-2xl border border-navy-100 dark:border-navy-700 bg-white dark:bg-navy-800">
+          {doc.content ? (
+            <div
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: doc.content }}
+            />
+          ) : (
+            <p className="text-sm text-navy-400 dark:text-navy-300">
+              Guidelines will be published here soon.
+            </p>
+          )}
 
-        {(doc.files || []).length > 0 && (
-          <div className="mt-10">
-            <h2 className="font-display text-lg text-navy-800 dark:text-paper mb-3">
-              Templates & Checklists
-            </h2>
-            <div className="space-y-2">
-              {doc.files.map((f, i) => {
-                const isPdf = /\.pdf($|\?)/i.test(f.fileUrl || "");
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => handleDownload(f, i)}
-                    disabled={downloadingIdx === i}
-                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl border border-navy-100 dark:border-navy-700 bg-white dark:bg-navy-800 hover:border-[#D9383A] dark:hover:border-[#3B82F6] transition-colors disabled:opacity-60"
-                  >
-                    <span className="flex items-center gap-3 min-w-0">
-                      <span className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-navy-50 dark:bg-navy-900 text-navy-500 dark:text-navy-300">
-                        {isPdf ? <FileText size={18} /> : <FileImage size={18} />}
+          {(doc.files || []).length > 0 && (
+            <div className="mt-10">
+              <h2 className="font-display text-lg text-navy-800 dark:text-paper mb-3">
+                Templates & Checklists
+              </h2>
+              <div className="space-y-2">
+                {doc.files.map((f, i) => {
+                  const isPdf = /\.pdf($|\?)/i.test(f.fileUrl || "");
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleDownload(f, i)}
+                      disabled={downloadingIdx === i}
+                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl border border-navy-100 dark:border-navy-700 bg-navy-50/60 dark:bg-navy-900/60 hover:border-[#D9383A] dark:hover:border-[#3B82F6] transition-colors disabled:opacity-60"
+                    >
+                      <span className="flex items-center gap-3 min-w-0">
+                        <span className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-white dark:bg-navy-800 text-navy-500 dark:text-navy-300">
+                          {isPdf ? (
+                            <FileText size={18} />
+                          ) : (
+                            <FileImage size={18} />
+                          )}
+                        </span>
+                        <span className="text-sm font-medium text-navy-800 dark:text-paper truncate">
+                          {f.name || "Download"}
+                        </span>
                       </span>
-                      <span className="text-sm font-medium text-navy-800 dark:text-paper truncate">
-                        {f.name || "Download"}
-                      </span>
-                    </span>
-                    <Download
-                      size={16}
-                      className="shrink-0 text-navy-400 dark:text-navy-300"
-                    />
-                  </button>
-                );
-              })}
+                      <Download
+                        size={16}
+                        className="shrink-0 text-navy-400 dark:text-navy-300"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </Section>
     </div>
   );
