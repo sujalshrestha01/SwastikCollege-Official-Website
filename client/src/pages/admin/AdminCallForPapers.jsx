@@ -163,7 +163,7 @@ export default function AdminCallForPapers() {
         </Card>
 
         <Card
-          title="Downloadable Templates / Checklists"
+          title="Downloadable Templates / Checklists (Attachments)"
           description="Optional PDF or Word files authors can download — e.g. a manuscript template or a submission checklist."
           action={
             <Button variant="secondary" onClick={addFile}>
