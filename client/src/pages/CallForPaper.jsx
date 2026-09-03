@@ -1,8 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { FileText, FileImage, Download, Megaphone } from "lucide-react";
-import { getCallForPapers, resolveImageUrl, downloadFile } from "../api/client";
+import { FileText, FileImage, Download, Megaphone, Eye } from "lucide-react";
+import {
+  getCallForPapers,
+  resolveImageUrl,
+  downloadFile,
+  previewFile,
+} from "../api/client";
 import { Section } from "../components/Visibility";
 import SEO from "../components/SEO";
+
+function handlePreview(fileUrl) {
+  previewFile(fileUrl).catch((err) =>
+    console.error("Preview failed:", err.message),
+  );
+}
 
 function formatDate(iso) {
   if (!iso) return "";
@@ -107,15 +118,28 @@ export default function CallForPaper() {
                     </h3>
                   </div>
                   {item.fileUrl && (
-                    <button
-                      type="button"
-                      onClick={() => handleDownload(item)}
-                      disabled={downloadingId === item._id}
-                      className="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3 py-1.5 rounded-full hover:bg-[#D9383A] hover:text-white dark:hover:bg-[#1E3A8A] hover:border-transparent transition-colors disabled:opacity-60"
-                    >
-                      <Download size={13} />
-                      {downloadingId === item._id ? "Downloading…" : "Notice"}
-                    </button>
+                    <div className="shrink-0 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handlePreview(item.fileUrl)}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3 py-1.5 rounded-full hover:bg-[#D9383A] hover:text-white dark:hover:bg-[#1E3A8A] hover:border-transparent transition-colors"
+                      >
+                        <Eye size={13} />
+                        View
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDownload(item)}
+                        disabled={downloadingId === item._id}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3 py-1.5 rounded-full hover:bg-[#D9383A] hover:text-white dark:hover:bg-[#1E3A8A] hover:border-transparent transition-colors disabled:opacity-60"
+                      >
+                        <Download size={13} />
+                        {downloadingId === item._id
+                          ? "Downloading…"
+                          : "Download"}
+                      </button>
+                    </div>
                   )}
                 </div>
                 {item.description && (
@@ -135,30 +159,51 @@ export default function CallForPaper() {
                         const isPdf = /\.pdf($|\?)/i.test(f.fileUrl || "");
                         const key = `${item._id}-${i}`;
                         return (
-                          <button
+                          <div
                             key={i}
-                            type="button"
-                            onClick={() => handleFileDownload(item, f, i)}
-                            disabled={downloadingKey === key}
-                            className="w-full flex items-center justify-between gap-3 p-3 rounded-xl border border-navy-100 dark:border-navy-700 bg-navy-50/60 dark:bg-navy-900/60 hover:border-[#D9383A] dark:hover:border-[#3B82F6] transition-colors disabled:opacity-60"
+                            className="w-full flex items-center justify-between gap-3 p-3 rounded-xl border border-navy-100 dark:border-navy-700 bg-navy-50/60 dark:bg-navy-900/60 hover:border-[#D9383A] dark:hover:border-[#3B82F6] transition-colors"
                           >
-                            <span className="flex items-center gap-3 min-w-0">
-                              <span className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-white dark:bg-navy-800 text-navy-500 dark:text-navy-300">
+                            {/* File Info */}
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-white dark:bg-navy-800 text-navy-500 dark:text-navy-300">
                                 {isPdf ? (
                                   <FileText size={18} />
                                 ) : (
                                   <FileImage size={18} />
                                 )}
-                              </span>
+                              </div>
+
                               <span className="text-sm font-medium text-navy-800 dark:text-paper truncate">
                                 {f.name || "Download"}
                               </span>
-                            </span>
-                            <Download
-                              size={16}
-                              className="shrink-0 text-navy-400 dark:text-navy-300"
-                            />
-                          </button>
+                            </div>
+
+                            {/* View + Download */}
+                            <div className="shrink-0 flex items-center gap-2">
+                              {/* View */}
+                              <button
+                                type="button"
+                                onClick={() => handlePreview(f.fileUrl)}
+                                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3 py-1.5 rounded-full hover:bg-[#D9383A] hover:text-white dark:hover:bg-[#1E3A8A] hover:border-transparent transition-colors"
+                              >
+                                <Eye size={13} />
+                                View
+                              </button>
+
+                              {/* Download */}
+                              <button
+                                type="button"
+                                onClick={() => handleFileDownload(item, f, i)}
+                                disabled={downloadingKey === key}
+                                className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3 py-1.5 rounded-full hover:bg-[#D9383A] hover:text-white dark:hover:bg-[#1E3A8A] hover:border-transparent transition-colors disabled:opacity-60"
+                              >
+                                <Download size={13} />
+                                {downloadingKey === key
+                                  ? "Downloading…"
+                                  : "Download"}
+                              </button>
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
