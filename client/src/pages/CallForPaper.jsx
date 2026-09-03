@@ -128,7 +128,7 @@ export default function CallForPaper() {
                 {(item.files || []).length > 0 && (
                   <div className="mt-5">
                     <h4 className="text-xs font-semibold uppercase tracking-wide text-navy-400 dark:text-navy-400 mb-2">
-                      Templates & Checklists
+                      Attachments
                     </h4>
                     <div className="space-y-2">
                       {item.files.map((f, i) => {
