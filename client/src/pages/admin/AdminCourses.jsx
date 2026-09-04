@@ -145,7 +145,7 @@ export default function AdminCourses() {
         ...prev.semesters,
         {
           title: `Semester ${prev.semesters.length + 1}`,
-          subjects: [{ name: "", code: "", creditHours: 3 }],
+          subjects: [{ name: "", code: "" }],
         },
       ],
     }));
@@ -170,7 +170,7 @@ export default function AdminCourses() {
         ...semesters[sIdx],
         subjects: [
           ...(semesters[sIdx].subjects || []),
-          { name: "", code: "", creditHours: 3 },
+          { name: "", code: "" },
         ],
       };
       return { ...prev, semesters };
