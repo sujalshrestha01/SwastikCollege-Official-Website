@@ -23,15 +23,22 @@ function AccordionItem({ semester, isOpen, onToggle }) {
       {isOpen && (
         <ul className="px-5 pb-4 space-y-2">
           {(semester.subjects?.length
-            ? semester.subjects.map((s) => s.name)
-            : semester.courses || []
-          ).map((c) => (
+            ? semester.subjects
+            : (semester.courses || []).map((name) => ({ name, code: "" }))
+          ).map((c, index) => (
             <li
-              key={c}
+              key={`${c.name}-${index}`}
               className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
-              {c}
+
+              <span>{c.name}</span>
+
+              {c.code && (
+                <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                  {c.code}
+                </span>
+              )}
             </li>
           ))}
         </ul>
