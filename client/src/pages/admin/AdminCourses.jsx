@@ -29,9 +29,7 @@ const emptyCourse = () => ({
   seats: 48,
   description: "",
   eligibility: [""],
-  semesters: [
-    { title: "Semester I", subjects: [{ name: "", code: "", creditHours: 3 }] },
-  ],
+  semesters: [{ title: "Semester I", subjects: [{ name: "", code: "" }] }],
   syllabusUrl: "",
   isActive: true,
   order: 0,
@@ -351,7 +349,7 @@ export default function AdminCourses() {
                   {(sem.subjects || []).map((sub, subIdx) => (
                     <div
                       key={subIdx}
-                      className="grid grid-cols-[1fr_100px_90px_36px] gap-2 items-center"
+                      className="grid grid-cols-[1fr_100px_36px] gap-2 items-center"
                     >
                       <Input
                         placeholder="Subject name"
@@ -367,7 +365,7 @@ export default function AdminCourses() {
                           updateSubject(sIdx, subIdx, "code", e.target.value)
                         }
                       />
-                      <Input
+                      {/* <Input
                         type="number"
                         placeholder="Credit"
                         value={sub.creditHours}
@@ -379,7 +377,7 @@ export default function AdminCourses() {
                             Number(e.target.value),
                           )
                         }
-                      />
+                      /> */}
                       <IconButton
                         variant="danger"
                         onClick={() => removeSubject(sIdx, subIdx)}
