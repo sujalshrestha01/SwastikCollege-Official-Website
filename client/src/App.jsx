@@ -10,6 +10,7 @@ import FloatingQuickAction from "./components/FloatingQuickAction";
 import Home from "./pages/Home";
 import Programs from "./pages/Programs";
 import CourseDetail from "./pages/CourseDetail";
+import SemesterSyllabus from "./pages/SemesterSyllabus";
 import NoticeBoard from "./pages/NoticeBoard";
 import Downloads from "./pages/Downloads";
 import Contact from "./pages/Contact";
@@ -94,6 +95,14 @@ function PublicSite() {
               </PageGate>
             }
           />
+          <Route
+  path="/programs/:slug/semester/:semesterSlug"
+  element={
+    <PageGate page="programs">
+      <SemesterSyllabus />
+    </PageGate>
+  }
+/>
           <Route
             path="/notices"
             element={
