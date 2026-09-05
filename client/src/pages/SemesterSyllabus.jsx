@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
-import {
-  ArrowLeft,
-  Download,
-  FileText,
-  CheckCircle2,
-} from "lucide-react";
+import { ArrowLeft, Download, FileText, CheckCircle2 } from "lucide-react";
 import { getCourse, resolveImageUrl } from "../api/client";
 import SEO from "../components/SEO";
 
@@ -84,7 +79,7 @@ export default function SemesterSyllabus() {
   const semesters = course.semesters || [];
 
   const semester = semesters.find(
-    (item) => createSlug(item.title) === semesterSlug
+    (item) => createSlug(item.title) === semesterSlug,
   );
 
   if (!semester) {
@@ -158,10 +153,7 @@ export default function SemesterSyllabus() {
                 key={`${subject.name || "subject"}-${index}`}
                 className="flex items-center gap-3 px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
               >
-                <CheckCircle2
-                  size={17}
-                  className="text-teal-500 shrink-0"
-                />
+                <CheckCircle2 size={17} className="text-teal-500 shrink-0" />
 
                 <span className="text-sm text-navy-600 dark:text-navy-200">
                   {subject.name}
@@ -195,10 +187,7 @@ export default function SemesterSyllabus() {
                 key={`${elective.name || "elective"}-${index}`}
                 className="flex items-center gap-3 px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
               >
-                <CheckCircle2
-                  size={17}
-                  className="text-teal-500 shrink-0"
-                />
+                <CheckCircle2 size={17} className="text-teal-500 shrink-0" />
 
                 <span className="text-sm text-navy-600 dark:text-navy-200">
                   {elective.name}
@@ -266,4 +255,3 @@ export default function SemesterSyllabus() {
     </div>
   );
 }
-

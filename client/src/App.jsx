@@ -96,13 +96,13 @@ function PublicSite() {
             }
           />
           <Route
-  path="/programs/:slug/semester/:semesterSlug"
-  element={
-    <PageGate page="programs">
-      <SemesterSyllabus />
-    </PageGate>
-  }
-/>
+            path="/programs/:slug/semester/:semesterSlug"
+            element={
+              <PageGate page="programs">
+                <SemesterSyllabus />
+              </PageGate>
+            }
+          />
           <Route
             path="/notices"
             element={
@@ -263,10 +263,7 @@ export default function App() {
                 path="author-guidelines"
                 element={<AdminAuthorGuidelines />}
               />
-              <Route
-                path="call-for-papers"
-                element={<AdminCallForPapers />}
-              />
+              <Route path="call-for-papers" element={<AdminCallForPapers />} />
               <Route path="journals" element={<AdminJournals />} />
               <Route path="publications" element={<AdminPublications />} />
               <Route path="qaa" element={<AdminQaa />} />

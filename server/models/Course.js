@@ -12,10 +12,18 @@ const subjectSchema = new mongoose.Schema(
 const semesterSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
-    // Backward-compatible: plain string subjects are supported too, but the
-    // admin panel edits the richer `subjects` array.
+
+    // Backward-compatible: plain string subjects are supported too.
     courses: [{ type: String }],
+
+    // Subjects with name, code and credit hours.
     subjects: [subjectSchema],
+
+    // Elective subjects for this semester.
+    electives: [subjectSchema],
+
+    // Full syllabus PDF for this semester.
+    syllabusUrl: { type: String, default: "" },
   },
   { _id: false },
 );
