@@ -60,6 +60,7 @@ export default function AdminCourses() {
   const [editing, setEditing] = useState(null); // course object being edited, or null
   const [isNew, setIsNew] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [saving, setSaving] = useState(false);
   const [expanded, setExpanded] = useState({});
 
@@ -78,12 +79,14 @@ export default function AdminCourses() {
     setEditing(emptyCourse());
     setIsNew(true);
     setError("");
+    setSuccess("");
   }
 
   function startEdit(course) {
     setEditing(JSON.parse(JSON.stringify(course)));
     setIsNew(false);
     setError("");
+    setSuccess("");
   }
 
   async function handleDelete(slug) {
@@ -100,6 +103,8 @@ export default function AdminCourses() {
   async function handleSave() {
     setSaving(true);
     setError("");
+    setSuccess("");
+
     try {
       const payload = {
         ...editing,
@@ -116,12 +121,25 @@ export default function AdminCourses() {
           syllabusUrl: s.syllabusUrl || "",
         })),
       };
+
       if (isNew) {
-        await coursesAdmin.create(payload);
+        const createdCourse = await coursesAdmin.create(payload);
+
+        // Keep the newly created course open in the editor
+        setEditing(createdCourse || payload);
+        setIsNew(false);
+
+        setSuccess("Course created successfully. Changes have been saved.");
       } else {
         await coursesAdmin.update(editing.slug, payload);
+
+        // Keep the current course open in the editor
+        setEditing(payload);
+
+        setSuccess("Course updated successfully. Changes have been saved.");
       }
-      setEditing(null);
+
+      // Refresh background course data without leaving the edit page
       await load();
     } catch (err) {
       setError(err.message);
@@ -284,6 +302,8 @@ export default function AdminCourses() {
         </div>
 
         {error && <Banner type="error">{error}</Banner>}
+
+        {success && <Banner type="success">{success}</Banner>}
 
         <Card title="Basic details">
           <div className="grid md:grid-cols-2 gap-4">
@@ -541,6 +561,8 @@ export default function AdminCourses() {
 
   return (
     <div className="space-y-6">
+      {success && <Banner type="success">{success}</Banner>}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl text-navy-800">
