@@ -4,7 +4,19 @@ import { ChevronDown, Download, CheckCircle2, ArrowLeft } from "lucide-react";
 import { getCourse, resolveImageUrl } from "../api/client";
 import SEO, { SITE_URL } from "../components/SEO";
 
-function AccordionItem({ semester, isOpen, onToggle }) {
+function AccordionItem({ semester, isOpen, onToggle, courseSlug }) {
+  const subjects = semester.subjects?.length
+    ? semester.subjects
+    : (semester.courses || []).map((name) => ({ name, code: "" }));
+
+  const electives = semester.electives || [];
+
+  // Create a URL-friendly semester slug
+  const semesterSlug = semester.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
   return (
     <div className="border border-navy-100 dark:border-navy-700 rounded-xl overflow-hidden bg-white dark:bg-navy-800">
       <button
@@ -15,33 +27,75 @@ function AccordionItem({ semester, isOpen, onToggle }) {
         <span className="font-medium text-navy dark:text-paper text-sm">
           {semester.title}
         </span>
+
         <ChevronDown
           size={17}
-          className={`text-navy-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`text-navy-400 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
+
       {isOpen && (
-        <ul className="px-5 pb-4 space-y-2">
-          {(semester.subjects?.length
-            ? semester.subjects
-            : (semester.courses || []).map((name) => ({ name, code: "" }))
-          ).map((c, index) => (
-            <li
-              key={`${c.name}-${index}`}
-              className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
+        <div className="px-5 pb-5">
+          {/* Core Subjects */}
+          <div className="space-y-2">
+            {subjects.map((c, index) => (
+              <div
+                key={`${c.name}-${index}`}
+                className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
+
+                <span>{c.name}</span>
+
+                {c.code && (
+                  <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                    {c.code}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Electives */}
+          {electives.length > 0 && (
+            <div className="mt-5 pt-4 border-t border-navy-100 dark:border-navy-700">
+              <p className="text-xs font-mono uppercase tracking-wider text-teal-600 dark:text-teal-400 mb-3">
+                Available Electives
+              </p>
+
+              <div className="space-y-2">
+                {electives.map((elective, index) => (
+                  <div
+                    key={`${elective.name}-${index}`}
+                    className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
+
+                    <span>{elective.name}</span>
+
+                    {elective.code && (
+                      <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                        {elective.code}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Full Syllabus */}
+          <div className="mt-5 pt-4 border-t border-navy-100 dark:border-navy-700">
+            <Link
+              to={`/programs/${courseSlug}/semester/${semesterSlug}`}
+              className="inline-flex items-center text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-marigold-600 dark:hover:text-marigold-400 transition-colors"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
-
-              <span>{c.name}</span>
-
-              {c.code && (
-                <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
-                  {c.code}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
+              Explore Full Syllabus →
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -147,6 +201,7 @@ export default function CourseDetail() {
               <AccordionItem
                 key={s.title}
                 semester={s}
+                courseSlug={slug}
                 isOpen={openIndex === i}
                 onToggle={() => setOpenIndex(openIndex === i ? -1 : i)}
               />
