@@ -30,13 +30,13 @@ const emptyCourse = () => ({
   description: "",
   eligibility: [""],
   semesters: [
-  {
-    title: "Semester I",
-    subjects: [{ name: "", code: "" }],
-    electives: [],
-    syllabusUrl: "",
-  },
-],
+    {
+      title: "Semester I",
+      subjects: [{ name: "", code: "" }],
+      electives: [],
+      syllabusUrl: "",
+    },
+  ],
   syllabusUrl: "",
   isActive: true,
   order: 0,
@@ -106,15 +106,15 @@ export default function AdminCourses() {
         slug: editing.slug || slugify(editing.name),
         eligibility: editing.eligibility.filter((e) => e.trim() !== ""),
         semesters: editing.semesters.map((s) => ({
-  title: s.title,
-  subjects: (s.subjects || []).filter(
-    (sub) => (sub.name || "").trim() !== ""
-  ),
-  electives: (s.electives || []).filter(
-    (e) => (e.name || "").trim() !== ""
-  ),
-  syllabusUrl: s.syllabusUrl || "",
-})),
+          title: s.title,
+          subjects: (s.subjects || []).filter(
+            (sub) => (sub.name || "").trim() !== "",
+          ),
+          electives: (s.electives || []).filter(
+            (e) => (e.name || "").trim() !== "",
+          ),
+          syllabusUrl: s.syllabusUrl || "",
+        })),
       };
       if (isNew) {
         await coursesAdmin.create(payload);
@@ -151,20 +151,20 @@ export default function AdminCourses() {
     }));
   }
 
-function addSemester() {
-  setEditing((prev) => ({
-    ...prev,
-    semesters: [
-      ...prev.semesters,
-      {
-        title: `Semester ${prev.semesters.length + 1}`,
-        subjects: [{ name: "", code: "" }],
-        electives: [],
-        syllabusUrl: "",
-      },
-    ],
-  }));
-}
+  function addSemester() {
+    setEditing((prev) => ({
+      ...prev,
+      semesters: [
+        ...prev.semesters,
+        {
+          title: `Semester ${prev.semesters.length + 1}`,
+          subjects: [{ name: "", code: "" }],
+          electives: [],
+          syllabusUrl: "",
+        },
+      ],
+    }));
+  }
   function removeSemester(sIdx) {
     setEditing((prev) => ({
       ...prev,
@@ -172,79 +172,76 @@ function addSemester() {
     }));
   }
   function updateSemesterTitle(sIdx, value) {
-  setEditing((prev) => {
-    const semesters = [...prev.semesters];
-    semesters[sIdx] = {
-      ...semesters[sIdx],
-      title: value,
-    };
-    return { ...prev, semesters };
-  });
-}
-function updateSemesterField(sIdx, key, value) {
-  setEditing((prev) => {
-    const semesters = [...prev.semesters];
-    semesters[sIdx] = { ...semesters[sIdx], [key]: value };
-    return { ...prev, semesters };
-  });
-}
+    setEditing((prev) => {
+      const semesters = [...prev.semesters];
+      semesters[sIdx] = {
+        ...semesters[sIdx],
+        title: value,
+      };
+      return { ...prev, semesters };
+    });
+  }
+  function updateSemesterField(sIdx, key, value) {
+    setEditing((prev) => {
+      const semesters = [...prev.semesters];
+      semesters[sIdx] = { ...semesters[sIdx], [key]: value };
+      return { ...prev, semesters };
+    });
+  }
 
-function addElective(sIdx) {
-  setEditing((prev) => {
-    const semesters = [...prev.semesters];
-    semesters[sIdx] = {
-      ...semesters[sIdx],
-      electives: [
-        ...(semesters[sIdx].electives || []),
-        { name: "", code: "" },
-      ],
-    };
-    return { ...prev, semesters };
-  });
-}
+  function addElective(sIdx) {
+    setEditing((prev) => {
+      const semesters = [...prev.semesters];
+      semesters[sIdx] = {
+        ...semesters[sIdx],
+        electives: [
+          ...(semesters[sIdx].electives || []),
+          { name: "", code: "" },
+        ],
+      };
+      return { ...prev, semesters };
+    });
+  }
 
-function updateElective(sIdx, eleIdx, key, value) {
-  setEditing((prev) => {
-    const semesters = [...prev.semesters];
-    const electives = [...(semesters[sIdx].electives || [])];
+  function updateElective(sIdx, eleIdx, key, value) {
+    setEditing((prev) => {
+      const semesters = [...prev.semesters];
+      const electives = [...(semesters[sIdx].electives || [])];
 
-    electives[eleIdx] = {
-      ...electives[eleIdx],
-      [key]: value,
-    };
+      electives[eleIdx] = {
+        ...electives[eleIdx],
+        [key]: value,
+      };
 
-    semesters[sIdx] = {
-      ...semesters[sIdx],
-      electives,
-    };
+      semesters[sIdx] = {
+        ...semesters[sIdx],
+        electives,
+      };
 
-    return { ...prev, semesters };
-  });
-}
+      return { ...prev, semesters };
+    });
+  }
 
-function removeElective(sIdx, eleIdx) {
-  setEditing((prev) => {
-    const semesters = [...prev.semesters];
+  function removeElective(sIdx, eleIdx) {
+    setEditing((prev) => {
+      const semesters = [...prev.semesters];
 
-    semesters[sIdx] = {
-      ...semesters[sIdx],
-      electives: (semesters[sIdx].electives || []).filter(
-        (_, i) => i !== eleIdx
-      ),
-    };
+      semesters[sIdx] = {
+        ...semesters[sIdx],
+        electives: (semesters[sIdx].electives || []).filter(
+          (_, i) => i !== eleIdx,
+        ),
+      };
 
-    return { ...prev, semesters };
-  });
-}
+      return { ...prev, semesters };
+    });
+  }
   function addSubject(sIdx) {
     setEditing((prev) => {
       const semesters = [...prev.semesters];
       semesters[sIdx] = {
         ...semesters[sIdx],
-        subjects: [
-          ...(semesters[sIdx].subjects || []),
-          { name: "", code: "" },
-        ],
+        subjects: [...(semesters[sIdx].subjects || []), { name: "", code: "" }],
       };
       return { ...prev, semesters };
     });
@@ -468,61 +465,63 @@ function removeElective(sIdx, eleIdx) {
                   <Plus size={15} /> Add subject
                 </Button>
                 <div className="mt-5 pt-4 border-t border-navy-100">
-  <div className="flex items-center justify-between mb-2">
-    <p className="text-sm font-semibold text-navy-700">Electives</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-semibold text-navy-700">
+                      Electives
+                    </p>
 
-    <Button
-      variant="secondary"
-      onClick={() => addElective(sIdx)}
-    >
-      <Plus size={15} /> Add elective
-    </Button>
-  </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => addElective(sIdx)}
+                    >
+                      <Plus size={15} /> Add elective
+                    </Button>
+                  </div>
 
-  <div className="space-y-2">
-    {(sem.electives || []).map((elective, eleIdx) => (
-      <div
-        key={eleIdx}
-        className="grid grid-cols-[1fr_100px_36px] gap-2 items-center"
-      >
-        <Input
-          placeholder="Elective subject name"
-          value={elective.name}
-          onChange={(e) =>
-            updateElective(sIdx, eleIdx, "name", e.target.value)
-          }
-        />
+                  <div className="space-y-2">
+                    {(sem.electives || []).map((elective, eleIdx) => (
+                      <div
+                        key={eleIdx}
+                        className="grid grid-cols-[1fr_100px_36px] gap-2 items-center"
+                      >
+                        <Input
+                          placeholder="Elective subject name"
+                          value={elective.name}
+                          onChange={(e) =>
+                            updateElective(sIdx, eleIdx, "name", e.target.value)
+                          }
+                        />
 
-        <Input
-          placeholder="Code"
-          value={elective.code}
-          onChange={(e) =>
-            updateElective(sIdx, eleIdx, "code", e.target.value)
-          }
-        />
+                        <Input
+                          placeholder="Code"
+                          value={elective.code}
+                          onChange={(e) =>
+                            updateElective(sIdx, eleIdx, "code", e.target.value)
+                          }
+                        />
 
-        <IconButton
-          variant="danger"
-          onClick={() => removeElective(sIdx, eleIdx)}
-        >
-          <Trash2 size={16} />
-        </IconButton>
-      </div>
-    ))}
-  </div>
-</div>
-<div className="mt-5 pt-4 border-t border-navy-100">
-  <Field label="Full semester syllabus PDF">
-    <FileUpload
-      value={sem.syllabusUrl || ""}
-      onChange={(url) =>
-        updateSemesterField(sIdx, "syllabusUrl", url)
-      }
-      accept="application/pdf"
-      hint="One PDF containing the complete syllabus for this semester."
-    />
-  </Field>
-</div>
+                        <IconButton
+                          variant="danger"
+                          onClick={() => removeElective(sIdx, eleIdx)}
+                        >
+                          <Trash2 size={16} />
+                        </IconButton>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-5 pt-4 border-t border-navy-100">
+                  <Field label="Full semester syllabus PDF">
+                    <FileUpload
+                      value={sem.syllabusUrl || ""}
+                      onChange={(url) =>
+                        updateSemesterField(sIdx, "syllabusUrl", url)
+                      }
+                      accept="application/pdf"
+                      hint="One PDF containing the complete syllabus for this semester."
+                    />
+                  </Field>
+                </div>
               </div>
             ))}
           </div>
