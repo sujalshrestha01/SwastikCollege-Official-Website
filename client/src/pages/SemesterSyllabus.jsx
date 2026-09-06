@@ -151,7 +151,7 @@ export default function SemesterSyllabus() {
             {subjects.map((subject, index) => (
               <div
                 key={`${subject.name || "subject"}-${index}`}
-                className="flex items-center gap-3 px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
+                className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3 px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
               >
                 <CheckCircle2 size={17} className="text-teal-500 shrink-0" />
 
@@ -160,7 +160,7 @@ export default function SemesterSyllabus() {
                 </span>
 
                 {subject.code && (
-                  <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                  <span className="font-mono text-xs text-navy-400 dark:text-navy-300 whitespace-nowrap text-right">
                     {subject.code}
                   </span>
                 )}
@@ -213,19 +213,19 @@ export default function SemesterSyllabus() {
                       {options.map((option, optionIndex) => (
                         <div
                           key={`${option.name || "option"}-${optionIndex}`}
-                          className="flex items-center gap-3"
+                          className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3"
                         >
                           <CheckCircle2
                             size={17}
-                            className="text-teal-500 shrink-0"
+                            className="text-teal-500 shrink-0 mt-0.5"
                           />
 
-                          <span className="text-sm text-navy-600 dark:text-navy-200">
+                          <span className="text-sm text-navy-600 dark:text-navy-200 min-w-0">
                             {option.name}
                           </span>
 
                           {option.code && (
-                            <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                            <span className="font-mono text-xs text-navy-400 dark:text-navy-300 whitespace-nowrap text-right">
                               {option.code}
                             </span>
                           )}

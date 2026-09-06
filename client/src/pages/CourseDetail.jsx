@@ -89,14 +89,14 @@ function AccordionItem({ semester, isOpen, onToggle, courseSlug }) {
                         {(elective.options || []).map((option, optionIndex) => (
                           <div
                             key={`${option.name}-${optionIndex}`}
-                            className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
+                            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-2 text-sm text-navy-500 dark:text-navy-200"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
 
                             <span>{option.name}</span>
 
                             {option.code && (
-                              <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                              <span className="font-mono text-xs text-navy-400 dark:text-navy-300 whitespace-nowrap text-right">
                                 {option.code}
                               </span>
                             )}
