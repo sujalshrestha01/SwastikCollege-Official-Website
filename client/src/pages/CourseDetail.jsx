@@ -89,7 +89,7 @@ function AccordionItem({ semester, isOpen, onToggle, courseSlug }) {
                         {(elective.options || []).map((option, optionIndex) => (
                           <div
                             key={`${option.name}-${optionIndex}`}
-                            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-2 text-sm text-navy-500 dark:text-navy-200"
+                            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
 
@@ -165,6 +165,7 @@ export default function CourseDetail() {
           },
         }}
       />
+
       <Link
         to="/programs"
         className="inline-flex items-center gap-1.5 text-sm text-navy-400 hover:text-marigold-600 mb-8"
@@ -175,12 +176,15 @@ export default function CourseDetail() {
       <p className="font-mono text-xs tracking-[0.2em] text-teal-600 dark:text-teal-400 uppercase mb-2">
         {course.duration}
       </p>
+
       <h1 className="font-display text-3xl sm:text-4xl font-medium text-navy dark:text-paper mb-2">
         {course.name}
       </h1>
+
       <p className="text-navy-500 dark:text-navy-200 font-medium">
         {course.tagline}
       </p>
+
       <p className="text-navy-400 dark:text-navy-300 mt-4 max-w-2xl leading-relaxed">
         {course.description}
       </p>
@@ -200,6 +204,7 @@ export default function CourseDetail() {
           <h2 className="font-display text-xl font-medium text-navy dark:text-paper mb-4">
             Admission Eligibility
           </h2>
+
           <ul className="space-y-3">
             {course.eligibility.map((e) => (
               <li
@@ -220,6 +225,7 @@ export default function CourseDetail() {
           <h2 className="font-display text-xl font-medium text-navy dark:text-paper mb-4">
             Semester Breakdown
           </h2>
+
           <div className="space-y-2.5">
             {course.semesters.map((s, i) => (
               <AccordionItem
