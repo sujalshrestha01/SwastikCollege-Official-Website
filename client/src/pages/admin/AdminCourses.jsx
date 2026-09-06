@@ -115,9 +115,14 @@ export default function AdminCourses() {
           subjects: (s.subjects || []).filter(
             (sub) => (sub.name || "").trim() !== "",
           ),
-          electives: (s.electives || []).filter(
-            (e) => (e.name || "").trim() !== "",
-          ),
+         electives: (s.electives || [])
+  .map((e) => ({
+    type: e.type || "elective",
+    options: (e.options || []).filter(
+      (option) => (option.name || "").trim() !== ""
+    ),
+  }))
+  .filter((e) => e.options.length > 0),
           syllabusUrl: s.syllabusUrl || "",
         })),
       };
@@ -207,53 +212,132 @@ export default function AdminCourses() {
     });
   }
 
-  function addElective(sIdx) {
-    setEditing((prev) => {
-      const semesters = [...prev.semesters];
-      semesters[sIdx] = {
-        ...semesters[sIdx],
-        electives: [
-          ...(semesters[sIdx].electives || []),
-          { name: "", code: "" },
-        ],
-      };
-      return { ...prev, semesters };
-    });
-  }
+function addElectiveGroup(sIdx) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
 
-  function updateElective(sIdx, eleIdx, key, value) {
-    setEditing((prev) => {
-      const semesters = [...prev.semesters];
-      const electives = [...(semesters[sIdx].electives || [])];
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives: [
+        ...(semesters[sIdx].electives || []),
+        {
+          type: "elective",
+          options: [{ name: "", code: "" }],
+        },
+      ],
+    };
 
-      electives[eleIdx] = {
-        ...electives[eleIdx],
-        [key]: value,
-      };
+    return { ...prev, semesters };
+  });
+}
 
-      semesters[sIdx] = {
-        ...semesters[sIdx],
-        electives,
-      };
+function updateElectiveGroupType(sIdx, eleIdx, value) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
+    const electives = [...(semesters[sIdx].electives || [])];
 
-      return { ...prev, semesters };
-    });
-  }
+    electives[eleIdx] = {
+      ...electives[eleIdx],
+      type: value,
+    };
 
-  function removeElective(sIdx, eleIdx) {
-    setEditing((prev) => {
-      const semesters = [...prev.semesters];
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives,
+    };
 
-      semesters[sIdx] = {
-        ...semesters[sIdx],
-        electives: (semesters[sIdx].electives || []).filter(
-          (_, i) => i !== eleIdx,
-        ),
-      };
+    return { ...prev, semesters };
+  });
+}
 
-      return { ...prev, semesters };
-    });
-  }
+function addElectiveOption(sIdx, eleIdx) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
+    const electives = [...(semesters[sIdx].electives || [])];
+
+    electives[eleIdx] = {
+      ...electives[eleIdx],
+      options: [
+        ...(electives[eleIdx].options || []),
+        { name: "", code: "" },
+      ],
+    };
+
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives,
+    };
+
+    return { ...prev, semesters };
+  });
+}
+
+function updateElectiveOption(
+  sIdx,
+  eleIdx,
+  optionIdx,
+  key,
+  value
+) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
+    const electives = [...(semesters[sIdx].electives || [])];
+    const options = [...(electives[eleIdx].options || [])];
+
+    options[optionIdx] = {
+      ...options[optionIdx],
+      [key]: value,
+    };
+
+    electives[eleIdx] = {
+      ...electives[eleIdx],
+      options,
+    };
+
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives,
+    };
+
+    return { ...prev, semesters };
+  });
+}
+
+function removeElectiveOption(sIdx, eleIdx, optionIdx) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
+    const electives = [...(semesters[sIdx].electives || [])];
+
+    electives[eleIdx] = {
+      ...electives[eleIdx],
+      options: (electives[eleIdx].options || []).filter(
+        (_, i) => i !== optionIdx
+      ),
+    };
+
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives,
+    };
+
+    return { ...prev, semesters };
+  });
+}
+
+function removeElectiveGroup(sIdx, eleIdx) {
+  setEditing((prev) => {
+    const semesters = [...prev.semesters];
+
+    semesters[sIdx] = {
+      ...semesters[sIdx],
+      electives: (semesters[sIdx].electives || []).filter(
+        (_, i) => i !== eleIdx
+      ),
+    };
+
+    return { ...prev, semesters };
+  });
+}
   function addSubject(sIdx) {
     setEditing((prev) => {
       const semesters = [...prev.semesters];
@@ -485,51 +569,144 @@ export default function AdminCourses() {
                   <Plus size={15} /> Add subject
                 </Button>
                 <div className="mt-5 pt-4 border-t border-navy-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-semibold text-navy-700">
-                      Electives
-                    </p>
+  <div className="flex items-center justify-between mb-3">
+    <div>
+      <p className="text-sm font-semibold text-navy-700">
+        Electives
+      </p>
+      <p className="text-xs text-navy-400 mt-1">
+        Add one or more elective groups for this semester.
+      </p>
+    </div>
 
-                    <Button
-                      variant="secondary"
-                      onClick={() => addElective(sIdx)}
-                    >
-                      <Plus size={15} /> Add elective
-                    </Button>
-                  </div>
+    <Button
+      variant="secondary"
+      onClick={() => addElectiveGroup(sIdx)}
+    >
+      <Plus size={15} /> Add elective group
+    </Button>
+  </div>
 
-                  <div className="space-y-2">
-                    {(sem.electives || []).map((elective, eleIdx) => (
-                      <div
-                        key={eleIdx}
-                        className="grid grid-cols-[1fr_100px_36px] gap-2 items-center"
-                      >
-                        <Input
-                          placeholder="Elective subject name"
-                          value={elective.name}
-                          onChange={(e) =>
-                            updateElective(sIdx, eleIdx, "name", e.target.value)
-                          }
-                        />
+  <div className="space-y-4">
+    {(sem.electives || []).map((elective, eleIdx) => (
+      <div
+        key={eleIdx}
+        className="border border-navy-100 rounded-xl p-4"
+      >
+        {/* Elective group header */}
+        <div className="flex items-end gap-3 mb-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-navy-700 mb-1">
+              Elective type
+            </label>
 
-                        <Input
-                          placeholder="Code"
-                          value={elective.code}
-                          onChange={(e) =>
-                            updateElective(sIdx, eleIdx, "code", e.target.value)
-                          }
-                        />
+            <select
+              value={elective.type || "elective"}
+              onChange={(e) =>
+                updateElectiveGroupType(
+                  sIdx,
+                  eleIdx,
+                  e.target.value
+                )
+              }
+              className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-sm text-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-200"
+            >
+              <option value="elective">Elective</option>
+              <option value="electiveI">Elective I</option>
+              <option value="electiveII">Elective II</option>
+              <option value="electiveIII">Elective III</option>
+              <option value="electiveIV">Elective IV</option>
+              <option value="electiveV">Elective V</option>
+              {/* <option value="electiveVI">Elective VI</option>
+              <option value="electiveVII">Elective VII</option>
+              <option value="electiveVIII">Elective VIII</option>
+              <option value="electiveIX">Elective IX</option>
+              <option value="electiveX">Elective X</option> */}
+            </select>
+          </div>
 
-                        <IconButton
-                          variant="danger"
-                          onClick={() => removeElective(sIdx, eleIdx)}
-                        >
-                          <Trash2 size={16} />
-                        </IconButton>
-                      </div>
-                    ))}
-                  </div>
+          <IconButton
+            variant="danger"
+            onClick={() =>
+              removeElectiveGroup(sIdx, eleIdx)
+            }
+          >
+            <Trash2 size={16} />
+          </IconButton>
+        </div>
+
+        {/* Available elective options */}
+        <div>
+          <p className="text-sm font-semibold text-navy-700 mb-2">
+            Available electives
+          </p>
+
+          <div className="space-y-2">
+            {(elective.options || []).map(
+              (option, optionIdx) => (
+                <div
+                  key={optionIdx}
+                  className="grid grid-cols-[1fr_100px_36px] gap-2 items-center"
+                >
+                  <Input
+                    placeholder="Elective subject name"
+                    value={option.name}
+                    onChange={(e) =>
+                      updateElectiveOption(
+                        sIdx,
+                        eleIdx,
+                        optionIdx,
+                        "name",
+                        e.target.value
+                      )
+                    }
+                  />
+
+                  <Input
+                    placeholder="Code"
+                    value={option.code}
+                    onChange={(e) =>
+                      updateElectiveOption(
+                        sIdx,
+                        eleIdx,
+                        optionIdx,
+                        "code",
+                        e.target.value
+                      )
+                    }
+                  />
+
+                  <IconButton
+                    variant="danger"
+                    onClick={() =>
+                      removeElectiveOption(
+                        sIdx,
+                        eleIdx,
+                        optionIdx
+                      )
+                    }
+                  >
+                    <Trash2 size={16} />
+                  </IconButton>
                 </div>
+              )
+            )}
+          </div>
+
+          <Button
+            variant="secondary"
+            className="mt-3"
+            onClick={() =>
+              addElectiveOption(sIdx, eleIdx)
+            }
+          >
+            <Plus size={15} /> Add elective
+          </Button>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
                 <div className="mt-5 pt-4 border-t border-navy-100">
                   <Field label="Full semester syllabus PDF">
                     <FileUpload
