@@ -65,23 +65,47 @@ function AccordionItem({ semester, isOpen, onToggle, courseSlug }) {
                 Available Electives
               </p>
 
-              <div className="space-y-2">
-                {electives.map((elective, index) => (
-                  <div
-                    key={`${elective.name}-${index}`}
-                    className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
+              <div className="space-y-4">
+                {electives.map((elective, index) => {
+                  const electiveLabel =
+                    {
+                      elective: "Elective",
+                      electiveI: "Elective I",
+                      electiveII: "Elective II",
+                      electiveIII: "Elective III",
+                      electiveIV: "Elective IV",
+                      electiveV: "Elective V",
+                    }[elective.type] ||
+                    elective.type ||
+                    "Elective";
 
-                    <span>{elective.name}</span>
+                  return (
+                    <div key={`${elective.type}-${index}`}>
+                      <p className="text-sm font-medium text-navy-700 dark:text-navy-100 mb-2">
+                        {electiveLabel}
+                      </p>
 
-                    {elective.code && (
-                      <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
-                        {elective.code}
-                      </span>
-                    )}
-                  </div>
-                ))}
+                      <div className="space-y-2">
+                        {(elective.options || []).map((option, optionIndex) => (
+                          <div
+                            key={`${option.name}-${optionIndex}`}
+                            className="flex items-center gap-2 text-sm text-navy-500 dark:text-navy-200"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-marigold-400 shrink-0" />
+
+                            <span>{option.name}</span>
+
+                            {option.code && (
+                              <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                                {option.code}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

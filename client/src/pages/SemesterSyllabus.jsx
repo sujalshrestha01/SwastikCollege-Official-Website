@@ -182,24 +182,64 @@ export default function SemesterSyllabus() {
           </h2>
 
           <div className="border border-navy-100 dark:border-navy-700 rounded-xl overflow-hidden bg-white dark:bg-navy-800">
-            {electives.map((elective, index) => (
-              <div
-                key={`${elective.name || "elective"}-${index}`}
-                className="flex items-center gap-3 px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
-              >
-                <CheckCircle2 size={17} className="text-teal-500 shrink-0" />
+            {electives.map((elective, index) => {
+              const electiveLabel =
+                {
+                  elective: "Elective",
+                  electiveI: "Elective I",
+                  electiveII: "Elective II",
+                  electiveIII: "Elective III",
+                  electiveIV: "Elective IV",
+                  electiveV: "Elective V",
+                }[elective.type] ||
+                elective.type ||
+                "Elective";
 
-                <span className="text-sm text-navy-600 dark:text-navy-200">
-                  {elective.name}
-                </span>
+              const options = elective.options || [];
 
-                {elective.code && (
-                  <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
-                    {elective.code}
-                  </span>
-                )}
-              </div>
-            ))}
+              return (
+                <div
+                  key={`${elective.type || "elective"}-${index}`}
+                  className="px-5 py-4 border-b last:border-b-0 border-navy-100 dark:border-navy-700"
+                >
+                  {/* Elective Group Label */}
+                  <p className="text-sm font-medium text-navy-700 dark:text-navy-100 mb-3">
+                    {electiveLabel}
+                  </p>
+
+                  {/* Elective Options */}
+                  {options.length > 0 ? (
+                    <div className="space-y-3">
+                      {options.map((option, optionIndex) => (
+                        <div
+                          key={`${option.name || "option"}-${optionIndex}`}
+                          className="flex items-center gap-3"
+                        >
+                          <CheckCircle2
+                            size={17}
+                            className="text-teal-500 shrink-0"
+                          />
+
+                          <span className="text-sm text-navy-600 dark:text-navy-200">
+                            {option.name}
+                          </span>
+
+                          {option.code && (
+                            <span className="ml-auto font-mono text-xs text-navy-400 dark:text-navy-300">
+                              {option.code}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-navy-400">
+                      No elective options listed.
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
