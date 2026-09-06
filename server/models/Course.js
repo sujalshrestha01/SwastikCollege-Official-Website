@@ -9,6 +9,24 @@ const subjectSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const electiveSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      default: "elective",
+    },
+
+    options: [
+      {
+        name: { type: String, required: true },
+        code: { type: String, default: "" },
+        creditHours: { type: Number, default: 3 },
+      },
+    ],
+  },
+  { _id: false },
+);
+
 const semesterSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
@@ -19,8 +37,8 @@ const semesterSchema = new mongoose.Schema(
     // Subjects with name, code and credit hours.
     subjects: [subjectSchema],
 
-    // Elective subjects for this semester.
-    electives: [subjectSchema],
+    // Elective groups for this semester.
+    electives: [electiveSchema],
 
     // Full syllabus PDF for this semester.
     syllabusUrl: { type: String, default: "" },
