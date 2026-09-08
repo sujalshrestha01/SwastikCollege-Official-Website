@@ -4,7 +4,14 @@ import {
   getAuthorGuidelinesAdmin,
   updateAuthorGuidelines,
 } from "../../api/client";
-import { Card, Field, Input, Button, IconButton, Banner } from "../../components/admin/Ui";
+import {
+  Card,
+  Field,
+  Input,
+  Button,
+  IconButton,
+  Banner,
+} from "../../components/admin/Ui";
 import FileUpload from "../../components/admin/FileUpload";
 import RichEditor from "../../components/RichEditor";
 
@@ -88,7 +95,7 @@ export default function AdminAuthorGuidelines() {
       </Card>
 
       <Card
-        title="Downloadable Templates / Checklists"
+        title="Downloadable Templates / Checklists (Attachments)"
         description="Optional PDF or Word files authors can download — e.g. a manuscript template or a submission checklist."
         action={
           <Button variant="secondary" onClick={addFile}>
