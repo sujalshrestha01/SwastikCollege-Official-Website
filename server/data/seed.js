@@ -231,7 +231,7 @@ const siteSettingsData = {
   heroCtaText: 'Explore Programs',
   heroCtaLink: '/programs',
   aboutSummary:
-    'Swastik College has been preparing students for technology and business careers since 2005, combining a TU-affiliated curriculum with hands-on project work and a close-knit campus community.',
+    'Swastik College has been preparing students for technology and business careers, combining a TU-affiliated curriculum with hands-on project work and a close-knit campus community.',
   missionStatement: 'To provide accessible, high-quality higher education that prepares students for real careers.',
   visionStatement: 'To be a leading college recognized for producing industry-ready graduates.',
   address: 'Putalisadak, Kathmandu, Nepal',
