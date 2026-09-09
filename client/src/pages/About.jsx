@@ -137,7 +137,7 @@ export default function About() {
                         "Tribhuvan University Affiliated"}
                     </p>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Est. {settings.establishedYear || "2005"}
+                      {/* Est. {settings.establishedYear || "2005"}  ESTD static changes made */}
                     </p>
                   </div>
                 </div>
