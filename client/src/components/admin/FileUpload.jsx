@@ -67,7 +67,7 @@ export default function FileUpload({
     setUploading(true);
     try {
       const result = await uploadImage(file);
-      onChange(result.url);
+      onChange(result.url, { fileName: file.name, size: result.size ?? file.size });
     } catch (err) {
       setError(err.message || "Upload failed");
     } finally {

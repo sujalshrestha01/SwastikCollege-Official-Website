@@ -13,9 +13,14 @@ const qaaDocumentSchema = new mongoose.Schema(
     fileUrl: { type: String, required: true },
     fileType: {
       type: String,
-      enum: ["pdf", "doc", "docx"],
+      enum: ["pdf", "doc", "docx", "image", "other"],
       required: true,
     },
+    // Original name of the uploaded file, kept so the list and the "Download"
+    // action can show/save something meaningful instead of the random storage
+    // id Cloudinary generates.
+    fileName: { type: String, default: "" },
+    fileSize: { type: Number, default: 0 }, // bytes; 0 = unknown
     status: {
       type: String,
       enum: ["pending", "verified"],

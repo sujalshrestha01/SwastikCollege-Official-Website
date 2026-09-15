@@ -64,30 +64,46 @@ export function Select({ children, ...props }) {
   );
 }
 
-export function Button({ variant = "primary", className = "", ...props }) {
+export function Button({
+  variant = "primary",
+  size = "md",
+  className = "",
+  ...props
+}) {
   const variants = {
     primary: "bg-marigold-400 text-navy-900 hover:bg-marigold-300",
     secondary: "bg-navy-100 text-navy-700 hover:bg-navy-200",
     danger: "bg-red-50 text-red-600 hover:bg-red-100",
     outline: "border border-navy-200 text-navy-700 hover:bg-navy-50",
   };
-  return (
-    <button
-      {...props}
-      className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant] || variants.primary} ${className}`}
-    />
-  );
-}
-
-export function IconButton({ variant = "outline", className = "", ...props }) {
-  const variants = {
-    outline: "border border-navy-200 text-navy-600 hover:bg-navy-50",
-    danger: "border border-red-200 text-red-600 hover:bg-red-50",
+  const sizes = {
+    md: "gap-2 px-4 py-2 text-sm",
+    sm: "gap-1.5 px-2.5 py-1.5 text-xs",
   };
   return (
     <button
       {...props}
-      className={`inline-flex items-center justify-center rounded-lg p-2 transition-colors ${variants[variant] || variants.outline} ${className}`}
+      className={`inline-flex items-center rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${sizes[size] || sizes.md} ${variants[variant] || variants.primary} ${className}`}
+    />
+  );
+}
+
+export function IconButton({
+  variant = "outline",
+  size = "md",
+  className = "",
+  ...props
+}) {
+  const variants = {
+    outline: "border border-navy-200 text-navy-600 hover:bg-navy-50",
+    danger: "border border-red-200 text-red-600 hover:bg-red-50",
+    success: "border border-green-200 text-green-700 hover:bg-green-50",
+  };
+  const sizes = { md: "p-2", sm: "p-1.5" };
+  return (
+    <button
+      {...props}
+      className={`inline-flex items-center justify-center rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${sizes[size] || sizes.md} ${variants[variant] || variants.outline} ${className}`}
     />
   );
 }
