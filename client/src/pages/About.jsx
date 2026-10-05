@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import aboutus1 from "../../assets/aboutus1.jpg";
+
 import {
   ArrowRight,
   BookOpenCheck,
@@ -17,11 +19,17 @@ import {
   Eye,
   ChevronRight,
 } from "lucide-react";
+
 import { Link } from "react-router";
+
 import SEO from "../components/SEO";
+
 import { useSettings } from "../context/SettingsContext";
+
 import { getGalleryEvents, resolveImageUrl } from "../api/client";
+
 import { Section } from "../components/Visibility";
+
 import Testimonials from "../components/Testimonials";
 
 // Maps icon name from database to Lucide React component
@@ -39,15 +47,19 @@ const ICON_MAP = {
 // Color classes mapped per key with dark-mode optimized gradients and borders
 const COLOR_MAP = {
   blue: "from-blue-500/10 via-indigo-500/5 to-transparent border-blue-500/20 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 dark:hover:border-blue-400/50",
+
   emerald:
     "from-emerald-500/10 via-teal-500/5 to-transparent border-emerald-500/20 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 dark:hover:border-emerald-400/50",
+
   amber:
     "from-amber-500/10 via-orange-500/5 to-transparent border-amber-500/20 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 dark:hover:border-amber-400/50",
+
   rose: "from-rose-500/10 via-pink-500/5 to-transparent border-rose-500/20 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 dark:hover:border-rose-400/50",
 };
 
 export default function About() {
   const { settings } = useSettings();
+
   const [galleryImages, setGalleryImages] = useState([]);
 
   useEffect(() => {
@@ -59,8 +71,16 @@ export default function About() {
   const timeline = settings.about?.timeline?.length
     ? settings.about.timeline
     : [];
-  const values = settings.about?.values?.length ? settings.about.values : [];
+
+  const values = settings.about?.values?.length
+    ? settings.about.values
+    : [];
+
   const leadership = settings.about?.leadership || {};
+
+  const boardOfDirectors = (settings.about?.boardOfDirectors || [])
+    .filter((member) => member?.isActive !== false)
+    .sort((a, b) => (a?.order || 0) - (b?.order || 0));
 
   return (
     <div className="bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-100 transition-colors duration-300">
@@ -70,6 +90,7 @@ export default function About() {
         path="/about"
         keywords="about Swastik College, Swastik College history, Swastik College mission vision"
       />
+
       {/* ------------------------------------------------------------------ */}
       {/* 1. HERO SECTION                                                    */}
       {/* ------------------------------------------------------------------ */}
@@ -81,7 +102,9 @@ export default function About() {
               <div className="lg:col-span-7 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-500/10 dark:bg-teal-500/10 border border-red-500/20 dark:border-teal-500/30 text-red-600 dark:text-teal-400 text-xs font-semibold tracking-wider uppercase">
                   <Sparkles size={14} />
-                  <span>About {settings.collegeName || "Our Institution"}</span>
+                  <span>
+                    About {settings.collegeName || "Our Institution"}
+                  </span>
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
@@ -108,6 +131,7 @@ export default function About() {
                     Explore Academic Programs
                     <ArrowRight size={16} />
                   </Link>
+
                   <Link
                     to="/contact"
                     className="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:border-slate-700 font-medium text-sm px-6 py-3 rounded-xl transition-all shadow-xs"
@@ -125,6 +149,7 @@ export default function About() {
                     alt={settings.collegeName}
                     className="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-700"
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
                   {/* Floating Info Pill */}
@@ -132,12 +157,14 @@ export default function About() {
                     <p className="text-xs font-mono uppercase tracking-wider text-teal-600 dark:text-teal-400 font-semibold">
                       Affiliation & Legacy
                     </p>
+
                     <p className="text-sm font-semibold text-slate-800 dark:text-white mt-1">
                       {settings.affiliation ||
                         "Tribhuvan University Affiliated"}
                     </p>
+
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Estd. {settings.establishedYear || "2005"}  
+                      Estd. {settings.establishedYear || "2005"}
                     </p>
                   </div>
                 </div>
@@ -156,6 +183,7 @@ export default function About() {
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
               Our Purpose & Direction
             </h2>
+
             <p className="text-slate-600 dark:text-slate-400 mt-2">
               Guided by a clear roadmap to empower future professionals and
               visionary thinkers.
@@ -168,9 +196,11 @@ export default function About() {
               <div className="w-12 h-12 rounded-2xl bg-teal-500 dark:bg-teal-600 text-white flex items-center justify-center mb-6 shadow-md shadow-teal-500/30 dark:shadow-teal-950/60">
                 <Target size={24} />
               </div>
+
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
                 Our Mission
               </h3>
+
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 {settings.missionStatement ||
                   "To provide transformative higher education combining technical excellence, research capability, and ethical foundation. We aim to equip students with critical skills needed to thrive in modern global careers."}
@@ -182,9 +212,11 @@ export default function About() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 dark:bg-amber-600 text-white flex items-center justify-center mb-6 shadow-md shadow-amber-500/30 dark:shadow-amber-950/60">
                 <Eye size={24} />
               </div>
+
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
                 Our Vision
               </h3>
+
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 {settings.visionStatement ||
                   "To be recognized as a premier educational landmark that inspires creative thinking, technological innovation, and sustainable leadership across diverse discipline boundaries."}
@@ -195,7 +227,126 @@ export default function About() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 3. CORE VALUES / FEATURES                                          */}
+{/* 3. BOARD OF DIRECTORS                                              */}
+{/* ------------------------------------------------------------------ */}
+<Section page="about" section="boardOfDirectors">
+  {boardOfDirectors.length > 0 && (
+    <section className="py-20 bg-slate-50 dark:bg-slate-950 border-y border-slate-200/80 dark:border-slate-800/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Heading */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 dark:border-teal-500/30 text-teal-600 dark:text-teal-400 text-xs font-semibold tracking-wider uppercase">
+            <Users size={14} />
+            <span>Leadership</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mt-4 tracking-tight">
+            Board of Directors
+          </h2>
+
+          <p className="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+            Meet the leaders guiding Swastik College with vision,
+            experience, and a commitment to academic excellence.
+          </p>
+        </div>
+
+        {/* Directors Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {boardOfDirectors.map((member, idx) => (
+            <article
+              key={`${member.name || "director"}-${idx}`}
+              className="
+                group relative overflow-hidden rounded-3xl
+                bg-white dark:bg-slate-900
+                border border-slate-200 dark:border-slate-800
+                shadow-sm
+                transition-all duration-500 ease-out
+                hover:-translate-y-2
+                hover:scale-[1.02]
+                hover:shadow-2xl
+                dark:hover:shadow-slate-950/60
+              "
+            >
+              {/* Image */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-800">
+                {member.photoUrl ? (
+                  <img
+                    src={resolveImageUrl(member.photoUrl)}
+                    alt={member.name || "Board of Directors member"}
+                    className="
+                      w-full h-full object-cover
+                      transition-transform duration-700 ease-out
+                      group-hover:scale-110
+                    "
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-teal-500/10 dark:bg-teal-500/15 border border-teal-500/20 dark:border-teal-500/30 flex items-center justify-center">
+                      <Users
+                        size={34}
+                        className="text-teal-600 dark:text-teal-400"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Hover Gradient */}
+                {member.description && (
+                  <div
+                    className="
+                      absolute inset-0
+                      bg-gradient-to-t
+                      from-slate-950/95
+                      via-slate-950/55
+                      to-transparent
+                      opacity-0
+                      group-hover:opacity-100
+                      transition-opacity duration-500
+                    "
+                  />
+                )}
+
+                {/* Description on Hover */}
+                {member.description && (
+                  <div
+                    className="
+                      absolute inset-x-0 bottom-0
+                      p-5 sm:p-6
+                      translate-y-4
+                      opacity-0
+                      group-hover:translate-y-0
+                      group-hover:opacity-100
+                      transition-all duration-500 ease-out
+                    "
+                  >
+                    <p className="text-sm sm:text-[15px] leading-relaxed text-white/95">
+                      {member.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Member Information */}
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                  {member.name}
+                </h3>
+
+                <p className="text-sm font-semibold text-teal-600 dark:text-teal-400 mt-1">
+                  {member.position}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* 4. CORE VALUES / FEATURES                                          */}
       {/* ------------------------------------------------------------------ */}
       <Section page="about" section="values">
         <section className="py-16 bg-white dark:bg-slate-900/60 border-y border-slate-200/80 dark:border-slate-800/80">
@@ -204,6 +355,7 @@ export default function About() {
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
                 What Sets Us Apart
               </h2>
+
               <p className="text-slate-500 dark:text-slate-400 mt-2">
                 The foundational pillars that define student life and academic
                 learning on our campus.
@@ -214,6 +366,7 @@ export default function About() {
               {values.map((v, idx) => {
                 const IconComponent = ICON_MAP[v.icon] || GraduationCap;
                 const colorCls = COLOR_MAP[v.colorKey] || COLOR_MAP.blue;
+
                 return (
                   <div
                     key={idx}
@@ -222,9 +375,11 @@ export default function About() {
                     <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-xs flex items-center justify-center mb-4">
                       <IconComponent size={20} />
                     </div>
+
                     <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
                       {v.title}
                     </h4>
+
                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                       {v.text}
                     </p>
@@ -237,7 +392,7 @@ export default function About() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 4. HISTORY & TIMELINE                                              */}
+      {/* 5. HISTORY & TIMELINE                                              */}
       {/* ------------------------------------------------------------------ */}
       <Section page="about" section="journey">
         <section className="py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -245,6 +400,7 @@ export default function About() {
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
               Our Journey
             </h2>
+
             <p className="text-slate-500 dark:text-slate-400 mt-2">
               How we evolved from a modest initiative into an academic
               destination.
@@ -267,6 +423,7 @@ export default function About() {
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                     {item.title}
                   </h3>
+
                   <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
                     {item.description}
                   </p>
@@ -278,7 +435,7 @@ export default function About() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 5. PRINCIPAL QUOTE / LEADERSHIP                                    */}
+      {/* 6. PRINCIPAL QUOTE / LEADERSHIP                                    */}
       {/* ------------------------------------------------------------------ */}
       <Section page="about" section="leadership">
         <section className="py-16 bg-slate-900 dark:bg-slate-900/90 border-y border-slate-800 text-white relative overflow-hidden">
@@ -287,13 +444,16 @@ export default function About() {
               size={40}
               className="mx-auto text-teal-400 opacity-80 mb-6"
             />
+
             <p className="text-xl sm:text-2xl font-medium leading-relaxed italic text-slate-200">
               "{leadership.text}"
             </p>
+
             <div className="mt-6">
               <h4 className="text-lg font-bold text-white">
                 {leadership.author}
               </h4>
+
               <p className="text-xs text-teal-400 tracking-wider uppercase mt-0.5 font-medium">
                 {leadership.role} — {settings.collegeName || "Our College"}
               </p>
@@ -303,7 +463,7 @@ export default function About() {
       </Section>
 
       {/* ------------------------------------------------------------------ */}
-      {/* 6. GALLERY PREVIEW                                                 */}
+      {/* 7. GALLERY PREVIEW                                                 */}
       {/* ------------------------------------------------------------------ */}
       {galleryImages.length > 0 && (
         <Section page="gallery" section="grid">
@@ -313,11 +473,13 @@ export default function About() {
                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
                   College Life
                 </h2>
+
                 <p className="text-slate-500 dark:text-slate-400 mt-1">
                   A glimpse into our college culture, facilities, and
                   activities.
                 </p>
               </div>
+
               <Link
                 to="/gallery"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline"
@@ -341,6 +503,7 @@ export default function About() {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     loading="lazy"
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                     <p className="text-white text-xs font-medium truncate">
                       {event.title || "Campus View"}
@@ -354,12 +517,12 @@ export default function About() {
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* 7. TESTIMONIALS SECTION                                            */}
+      {/* 8. TESTIMONIALS SECTION                                            */}
       {/* ------------------------------------------------------------------ */}
       <Testimonials />
 
       {/* ------------------------------------------------------------------ */}
-      {/* 8. CALL TO ACTION                                                  */}
+      {/* 9. CALL TO ACTION                                                   */}
       {/* ------------------------------------------------------------------ */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-teal-600 to-emerald-700 dark:from-teal-700 dark:to-emerald-800 text-white p-8 sm:p-12 shadow-2xl dark:shadow-teal-950/50 border border-teal-500/30 dark:border-teal-500/20 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -367,6 +530,7 @@ export default function About() {
             <h2 className="text-3xl font-extrabold tracking-tight">
               Start Your Journey With Us
             </h2>
+
             <p className="text-teal-100 text-sm sm:text-base leading-relaxed">
               Admissions are open for upcoming academic sessions. Connect with
               our counseling team to choose the right path for your career.
@@ -380,6 +544,7 @@ export default function About() {
             >
               Browse Programs
             </Link>
+
             <Link
               to="/contact"
               className="bg-teal-800/60 hover:bg-teal-800 dark:bg-slate-900/60 dark:hover:bg-slate-900 text-white border border-teal-400/30 font-semibold text-sm px-6 py-3.5 rounded-xl transition"

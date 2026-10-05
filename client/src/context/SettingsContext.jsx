@@ -23,11 +23,12 @@ const defaultSettings = {
   heroCtaLink: "/programs",
 
   heroStatusLog: [
-    { label: "college", value: "" }, // filled from collegeShortName at render if empty
+    { label: "college", value: "" },
     { label: "admissions", value: "open" },
-    { label: "affiliation", value: "" }, // filled from affiliation at render if empty
-    { label: "contact", value: "" }, // filled from phone at render if empty
+    { label: "affiliation", value: "" },
+    { label: "contact", value: "" },
   ],
+
   whyChooseUs: [
     {
       icon: "GraduationCap",
@@ -54,9 +55,11 @@ const defaultSettings = {
         "Guided by seasoned educators, tech leaders, and vibrant entrepreneurs dedicated to student mentorship.",
     },
   ],
+
   aboutSummary: "",
   missionStatement: "",
   visionStatement: "",
+
   address: "Kathmandu, Nepal",
   phone: "",
   email: "",
@@ -66,20 +69,28 @@ const defaultSettings = {
   footerNote: "All rights reserved.",
   announcementBarText: "",
   announcementBarEnabled: false,
+
   // Legacy flat toggles (kept for backward compatibility)
   features: {
     blogDisabled: false,
     galleryDisabled: false,
     heroStatusLogDisabled: false,
   },
+
   // Generic page + section visibility engine. Populated from the server, which
   // always merges saved values on top of the full page/section catalogue —
   // so every page/section defaults to visible even before an admin ever
   // touches the toggle screen.
   // Shape: { <page>: { pageEnabled: bool, sections: { <section>: bool } } }
   visibility: {},
-  // Editable content for the About page (timeline, values, leadership quote)
-  about: { timeline: [], values: [], leadership: null },
+
+  // Editable content for the About page
+  about: {
+    timeline: [],
+    values: [],
+    leadership: null,
+    boardOfDirectors: [],
+  },
 };
 
 const SettingsContext = createContext({
@@ -94,24 +105,29 @@ export function SettingsProvider({ children }) {
 
   const refresh = useCallback(async () => {
     const data = await getSettings();
+
     if (data) {
       setSettings({
         ...defaultSettings,
         ...data,
+
         features: {
           ...defaultSettings.features,
           ...(data.features || {}),
         },
+
         visibility: {
           ...defaultSettings.visibility,
           ...(data.visibility || {}),
         },
+
         about: {
           ...defaultSettings.about,
           ...(data.about || {}),
         },
       });
     }
+
     setLoading(false);
   }, []);
 
@@ -122,21 +138,32 @@ export function SettingsProvider({ children }) {
   // Is an entire page enabled? Defaults to true if not yet configured.
   function isPageEnabled(page) {
     const p = settings.visibility?.[page];
+
     return p ? p.pageEnabled !== false : true;
   }
 
   // Is a specific section within a page enabled? Defaults to true.
   function isSectionVisible(page, section) {
     if (!isPageEnabled(page)) return false;
+
     const p = settings.visibility?.[page];
-    if (!p || !p.sections || typeof p.sections[section] !== "boolean")
+
+    if (!p || !p.sections || typeof p.sections[section] !== "boolean") {
       return true;
+    }
+
     return p.sections[section];
   }
 
   return (
     <SettingsContext.Provider
-      value={{ settings, loading, refresh, isPageEnabled, isSectionVisible }}
+      value={{
+        settings,
+        loading,
+        refresh,
+        isPageEnabled,
+        isSectionVisible,
+      }}
     >
       {children}
     </SettingsContext.Provider>

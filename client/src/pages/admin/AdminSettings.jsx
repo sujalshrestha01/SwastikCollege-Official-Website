@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   Save,
   Plus,
@@ -16,8 +17,11 @@ import {
   BookOpenCheck,
   FileDown,
 } from "lucide-react";
+
 import { Link as RouterLink } from "react-router";
+
 import { getSettings, updateSettings } from "../../api/client";
+
 import {
   Card,
   Field,
@@ -28,6 +32,7 @@ import {
   Banner,
   Textarea,
 } from "../../components/admin/Ui";
+
 import ImageUpload from "../../components/admin/ImageUpload";
 import { useSettings } from "../../context/SettingsContext";
 import HeroCarouselUpload from "../../components/admin/HeroCarouselUpload";
@@ -42,10 +47,12 @@ const ICON_OPTIONS = [
   "Compass",
   "BookOpenCheck",
 ];
+
 const COLOR_OPTIONS = ["blue", "emerald", "amber", "rose"];
 
 export default function AdminSettings() {
   const { refresh } = useSettings();
+
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -83,6 +90,7 @@ export default function AdminSettings() {
     setSettings((prev) => {
       const stats = [...prev.stats];
       stats[idx] = { ...stats[idx], [key]: value };
+
       return { ...prev, stats };
     });
   }
@@ -101,21 +109,29 @@ export default function AdminSettings() {
     }));
   }
 
-  // Add these handler functions near your existing setStat/addStat/removeStat functions:
-
   function setHeroStatusRow(idx, key, value) {
     setSettings((prev) => {
       const rows = [...(prev.heroStatusLog || [])];
-      rows[idx] = { ...rows[idx], [key]: value };
-      return { ...prev, heroStatusLog: rows };
+
+      rows[idx] = {
+        ...rows[idx],
+        [key]: value,
+      };
+
+      return {
+        ...prev,
+        heroStatusLog: rows,
+      };
     });
   }
+
   function addHeroStatusRow() {
     setSettings((prev) => ({
       ...prev,
       heroStatusLog: [...(prev.heroStatusLog || []), { label: "", value: "" }],
     }));
   }
+
   function removeHeroStatusRow(idx) {
     setSettings((prev) => ({
       ...prev,
@@ -126,19 +142,33 @@ export default function AdminSettings() {
   function setWhyChooseUsItem(idx, key, value) {
     setSettings((prev) => {
       const items = [...(prev.whyChooseUs || [])];
-      items[idx] = { ...items[idx], [key]: value };
-      return { ...prev, whyChooseUs: items };
+
+      items[idx] = {
+        ...items[idx],
+        [key]: value,
+      };
+
+      return {
+        ...prev,
+        whyChooseUs: items,
+      };
     });
   }
+
   function addWhyChooseUsItem() {
     setSettings((prev) => ({
       ...prev,
       whyChooseUs: [
         ...(prev.whyChooseUs || []),
-        { icon: "GraduationCap", title: "", description: "" },
+        {
+          icon: "GraduationCap",
+          title: "",
+          description: "",
+        },
       ],
     }));
   }
+
   function removeWhyChooseUsItem(idx) {
     setSettings((prev) => ({
       ...prev,
@@ -147,13 +177,26 @@ export default function AdminSettings() {
   }
 
   // ---- About page content (timeline / values / leadership quote) ----
+
   function setAboutField(section, idx, key, value) {
     setSettings((prev) => {
       const list = [...(prev.about?.[section] || [])];
-      list[idx] = { ...list[idx], [key]: value };
-      return { ...prev, about: { ...prev.about, [section]: list } };
+
+      list[idx] = {
+        ...list[idx],
+        [key]: value,
+      };
+
+      return {
+        ...prev,
+        about: {
+          ...prev.about,
+          [section]: list,
+        },
+      };
     });
   }
+
   function addAboutItem(section, empty) {
     setSettings((prev) => ({
       ...prev,
@@ -163,6 +206,7 @@ export default function AdminSettings() {
       },
     }));
   }
+
   function removeAboutItem(section, idx) {
     setSettings((prev) => ({
       ...prev,
@@ -172,12 +216,69 @@ export default function AdminSettings() {
       },
     }));
   }
+
   function setLeadership(key, value) {
     setSettings((prev) => ({
       ...prev,
       about: {
         ...prev.about,
-        leadership: { ...prev.about?.leadership, [key]: value },
+        leadership: {
+          ...prev.about?.leadership,
+          [key]: value,
+        },
+      },
+    }));
+  }
+
+  // ---- Board of Directors ----
+
+  function setBoardMember(idx, key, value) {
+    setSettings((prev) => {
+      const boardOfDirectors = [...(prev.about?.boardOfDirectors || [])];
+
+      boardOfDirectors[idx] = {
+        ...boardOfDirectors[idx],
+        [key]: value,
+      };
+
+      return {
+        ...prev,
+        about: {
+          ...prev.about,
+          boardOfDirectors,
+        },
+      };
+    });
+  }
+
+  function addBoardMember() {
+    setSettings((prev) => ({
+      ...prev,
+      about: {
+        ...prev.about,
+        boardOfDirectors: [
+          ...(prev.about?.boardOfDirectors || []),
+          {
+            name: "",
+            position: "",
+            photoUrl: "",
+            description: "",
+            order: (prev.about?.boardOfDirectors?.length || 0) + 1,
+            isActive: true,
+          },
+        ],
+      },
+    }));
+  }
+
+  function removeBoardMember(idx) {
+    setSettings((prev) => ({
+      ...prev,
+      about: {
+        ...prev.about,
+        boardOfDirectors: (prev.about?.boardOfDirectors || []).filter(
+          (_, i) => i !== idx,
+        ),
       },
     }));
   }
@@ -185,34 +286,44 @@ export default function AdminSettings() {
   async function handleSave() {
     setSaving(true);
     setMessage(null);
+
     try {
       const updated = await updateSettings(settings);
+
       setSettings(updated);
+
       await refresh();
+
       setMessage({
         type: "success",
         text: "Settings saved and live on the site.",
       });
     } catch (err) {
-      setMessage({ type: "error", text: err.message });
+      setMessage({
+        type: "error",
+        text: err.message,
+      });
     } finally {
       setSaving(false);
     }
   }
 
-  if (loading || !settings)
+  if (loading || !settings) {
     return <p className="text-sm text-navy-400">Loading…</p>;
+  }
 
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center justify-between sticky -top-10 bg-paper z-10 py-2">
         <div>
           <h1 className="font-display text-2xl text-navy-800">Site Settings</h1>
+
           <p className="text-sm text-navy-500 mt-1">
             Every small detail — social links, contact info, homepage content,
             footer.
           </p>
         </div>
+
         <Button onClick={handleSave} disabled={saving}>
           <Save size={16} /> {saving ? "Saving…" : "Save All Changes"}
         </Button>
@@ -228,6 +339,7 @@ export default function AdminSettings() {
               onChange={(e) => set("collegeName", e.target.value)}
             />
           </Field>
+
           <Field
             label="Short name"
             hint="Used in compact spaces like the navbar"
@@ -237,18 +349,21 @@ export default function AdminSettings() {
               onChange={(e) => set("collegeShortName", e.target.value)}
             />
           </Field>
+
           <Field label="Established year">
             <Input
               value={settings.establishedYear}
               onChange={(e) => set("establishedYear", e.target.value)}
             />
           </Field>
+
           <Field label="Affiliation">
             <Input
               value={settings.affiliation}
               onChange={(e) => set("affiliation", e.target.value)}
             />
           </Field>
+
           <Field label="Logo">
             <ImageUpload
               value={settings.logoUrl}
@@ -267,6 +382,7 @@ export default function AdminSettings() {
               onChange={(e) => set("heroHeadline", e.target.value)}
             />
           </Field>
+
           <Field label="Subheadline">
             <Textarea
               rows={2}
@@ -274,6 +390,7 @@ export default function AdminSettings() {
               onChange={(e) => set("heroSubheadline", e.target.value)}
             />
           </Field>
+
           <div className="grid md:grid-cols-2 gap-4">
             <Field label="Call-to-action text">
               <Input
@@ -281,6 +398,7 @@ export default function AdminSettings() {
                 onChange={(e) => set("heroCtaText", e.target.value)}
               />
             </Field>
+
             <Field label="Call-to-action link">
               <Input
                 value={settings.heroCtaLink}
@@ -288,12 +406,14 @@ export default function AdminSettings() {
               />
             </Field>
           </div>
+
           <Field label="Hero image">
             <ImageUpload
               value={settings.heroImageUrl}
               onChange={(url) => set("heroImageUrl", url)}
             />
           </Field>
+
           <Field
             label="Hero carousel images"
             hint="If any images are added here, the carousel replaces the single hero image above."
@@ -323,11 +443,13 @@ export default function AdminSettings() {
                 value={row.label}
                 onChange={(e) => setHeroStatusRow(i, "label", e.target.value)}
               />
+
               <Input
                 placeholder="Value (optional)"
                 value={row.value}
                 onChange={(e) => setHeroStatusRow(i, "value", e.target.value)}
               />
+
               <IconButton
                 variant="danger"
                 onClick={() => removeHeroStatusRow(i)}
@@ -364,6 +486,7 @@ export default function AdminSettings() {
                   </option>
                 ))}
               </Select>
+
               <div className="space-y-2">
                 <Input
                   placeholder="Title"
@@ -372,6 +495,7 @@ export default function AdminSettings() {
                     setWhyChooseUsItem(i, "title", e.target.value)
                   }
                 />
+
                 <Textarea
                   rows={2}
                   placeholder="Description"
@@ -381,6 +505,7 @@ export default function AdminSettings() {
                   }
                 />
               </div>
+
               <IconButton
                 variant="danger"
                 onClick={() => removeWhyChooseUsItem(i)}
@@ -401,6 +526,7 @@ export default function AdminSettings() {
               onChange={(e) => set("aboutSummary", e.target.value)}
             />
           </Field>
+
           <Field label="Mission statement">
             <Textarea
               rows={2}
@@ -408,6 +534,7 @@ export default function AdminSettings() {
               onChange={(e) => set("missionStatement", e.target.value)}
             />
           </Field>
+
           <Field label="Vision statement">
             <Textarea
               rows={2}
@@ -425,7 +552,11 @@ export default function AdminSettings() {
           <Button
             variant="secondary"
             onClick={() =>
-              addAboutItem("timeline", { year: "", title: "", description: "" })
+              addAboutItem("timeline", {
+                year: "",
+                title: "",
+                description: "",
+              })
             }
           >
             <Plus size={16} /> Add milestone
@@ -445,6 +576,7 @@ export default function AdminSettings() {
                   setAboutField("timeline", i, "year", e.target.value)
                 }
               />
+
               <div className="space-y-2">
                 <Input
                   placeholder="Title"
@@ -453,6 +585,7 @@ export default function AdminSettings() {
                     setAboutField("timeline", i, "title", e.target.value)
                   }
                 />
+
                 <Textarea
                   rows={2}
                   placeholder="Description"
@@ -462,6 +595,7 @@ export default function AdminSettings() {
                   }
                 />
               </div>
+
               <IconButton
                 variant="danger"
                 onClick={() => removeAboutItem("timeline", i)}
@@ -510,6 +644,7 @@ export default function AdminSettings() {
                   </option>
                 ))}
               </Select>
+
               <Select
                 value={item.colorKey}
                 onChange={(e) =>
@@ -522,6 +657,7 @@ export default function AdminSettings() {
                   </option>
                 ))}
               </Select>
+
               <div className="space-y-2">
                 <Input
                   placeholder="Title"
@@ -530,6 +666,7 @@ export default function AdminSettings() {
                     setAboutField("values", i, "title", e.target.value)
                   }
                 />
+
                 <Textarea
                   rows={2}
                   placeholder="Description"
@@ -539,12 +676,109 @@ export default function AdminSettings() {
                   }
                 />
               </div>
+
               <IconButton
                 variant="danger"
                 onClick={() => removeAboutItem("values", i)}
               >
                 <Trash2 size={16} />
               </IconButton>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Board of Directors */}
+      <Card
+        title="About page — Board of Directors"
+        description="Manage the Board of Directors displayed on the About page"
+        action={
+          <Button variant="secondary" onClick={addBoardMember}>
+            <Plus size={16} /> Add member
+          </Button>
+        }
+      >
+        <div className="space-y-3">
+          {(settings.about?.boardOfDirectors || []).map((member, i) => (
+            <div key={i} className="space-y-3 bg-navy-50/50 p-3 rounded-lg">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-navy-800">
+                    Board Member {i + 1}
+                  </p>
+                </div>
+
+                <IconButton
+                  variant="danger"
+                  onClick={() => removeBoardMember(i)}
+                >
+                  <Trash2 size={16} />
+                </IconButton>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                <Field label="Name">
+                  <Input
+                    placeholder="e.g. Dilli Raj Khanal, Ph.D."
+                    value={member.name || ""}
+                    onChange={(e) => setBoardMember(i, "name", e.target.value)}
+                  />
+                </Field>
+
+                <Field label="Position">
+                  <Input
+                    placeholder="e.g. Chairman"
+                    value={member.position || ""}
+                    onChange={(e) =>
+                      setBoardMember(i, "position", e.target.value)
+                    }
+                  />
+                </Field>
+              </div>
+
+              <Field label="Photo">
+                <ImageUpload
+                  value={member.photoUrl || ""}
+                  onChange={(url) => setBoardMember(i, "photoUrl", url)}
+                  shape="square"
+                />
+              </Field>
+
+              <Field label="Description" hint="Optional">
+                <Textarea
+                  rows={2}
+                  placeholder="Optional description"
+                  value={member.description || ""}
+                  onChange={(e) =>
+                    setBoardMember(i, "description", e.target.value)
+                  }
+                />
+              </Field>
+
+              <div className="grid md:grid-cols-2 gap-3">
+                <Field label="Display order">
+                  <Input
+                    type="number"
+                    value={member.order ?? i + 1}
+                    onChange={(e) =>
+                      setBoardMember(i, "order", Number(e.target.value))
+                    }
+                  />
+                </Field>
+
+                <label className="flex items-center gap-2 cursor-pointer self-end pb-2">
+                  <input
+                    type="checkbox"
+                    checked={member.isActive !== false}
+                    onChange={(e) =>
+                      setBoardMember(i, "isActive", e.target.checked)
+                    }
+                    className="rounded text-marigold focus:ring-marigold"
+                  />
+
+                  <span className="text-sm text-navy-700">Show on website</span>
+                </label>
+              </div>
             </div>
           ))}
         </div>
@@ -562,6 +796,7 @@ export default function AdminSettings() {
               onChange={(e) => setLeadership("text", e.target.value)}
             />
           </Field>
+
           <div className="grid md:grid-cols-2 gap-4">
             <Field label="Author name">
               <Input
@@ -569,6 +804,7 @@ export default function AdminSettings() {
                 onChange={(e) => setLeadership("author", e.target.value)}
               />
             </Field>
+
             <Field label="Author role">
               <Input
                 value={settings.about?.leadership?.role || ""}
@@ -596,17 +832,20 @@ export default function AdminSettings() {
                 value={s.label}
                 onChange={(e) => setStat(i, "label", e.target.value)}
               />
+
               <Input
                 type="number"
                 placeholder="Value"
                 value={s.value}
                 onChange={(e) => setStat(i, "value", Number(e.target.value))}
               />
+
               <Input
                 placeholder="Suffix (+)"
                 value={s.suffix}
                 onChange={(e) => setStat(i, "suffix", e.target.value)}
               />
+
               <IconButton variant="danger" onClick={() => removeStat(i)}>
                 <Trash2 size={16} />
               </IconButton>
@@ -623,24 +862,28 @@ export default function AdminSettings() {
               onChange={(e) => set("address", e.target.value)}
             />
           </Field>
+
           <Field label="Phone">
             <Input
               value={settings.phone}
               onChange={(e) => set("phone", e.target.value)}
             />
           </Field>
+
           <Field label="Email">
             <Input
               value={settings.email}
               onChange={(e) => set("email", e.target.value)}
             />
           </Field>
+
           <Field label="Office hours">
             <Input
               value={settings.officeHours}
               onChange={(e) => set("officeHours", e.target.value)}
             />
           </Field>
+
           <Field label="Google Maps embed URL" className="md:col-span-2">
             <Input
               value={settings.mapEmbedUrl}
@@ -668,6 +911,7 @@ export default function AdminSettings() {
               placeholder="https://facebook.com/yourcollege"
             />
           </Field>
+
           <Field
             label={
               <span className="flex items-center gap-1.5">
@@ -680,6 +924,7 @@ export default function AdminSettings() {
               onChange={(e) => setSocial("instagram", e.target.value)}
             />
           </Field>
+
           <Field
             label={
               <span className="flex items-center gap-1.5">
@@ -692,6 +937,7 @@ export default function AdminSettings() {
               onChange={(e) => setSocial("youtube", e.target.value)}
             />
           </Field>
+
           <Field
             label={
               <span className="flex items-center gap-1.5">
@@ -704,6 +950,7 @@ export default function AdminSettings() {
               onChange={(e) => setSocial("linkedin", e.target.value)}
             />
           </Field>
+
           <Field
             label={
               <span className="flex items-center gap-1.5">
@@ -716,6 +963,7 @@ export default function AdminSettings() {
               onChange={(e) => setSocial("twitter", e.target.value)}
             />
           </Field>
+
           <Field label="TikTok">
             <Input
               value={settings.socialLinks?.tiktok || ""}
@@ -762,16 +1010,19 @@ export default function AdminSettings() {
               onChange={(e) => setFeature("blogDisabled", e.target.checked)}
               className="rounded text-marigold focus:ring-marigold"
             />
+
             <div>
               <span className="text-sm font-medium text-navy-800 dark:text-paper">
                 Disable Blog Module
               </span>
+
               <p className="text-xs text-navy-500">
                 When checked, hides the Blog link from the navbar and disables
                 the blog section.
               </p>
             </div>
           </label>
+
           <p className="text-xs text-navy-400 px-2">
             For fine-grained control over every page and section (hero banners,
             timelines, individual blocks), use the{" "}
@@ -794,10 +1045,12 @@ export default function AdminSettings() {
               checked={settings.announcementBarEnabled}
               onChange={(e) => set("announcementBarEnabled", e.target.checked)}
             />
+
             <span className="text-sm text-navy-700">
               Show announcement bar at the top of the site
             </span>
           </label>
+
           <Field label="Announcement text">
             <Input
               value={settings.announcementBarText}
