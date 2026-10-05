@@ -32,6 +32,7 @@ export const VISIBILITY_SCHEMA = {
       blog: "Latest from the Blog",
     },
   },
+
   about: {
     label: "About Us",
     sections: {
@@ -39,10 +40,12 @@ export const VISIBILITY_SCHEMA = {
       journey: "Our Journey",
       missionVision: "Mission & Vision",
       values: "Core Values",
+      boardOfDirectors: "Board of Directors",
       leadership: "Leadership Message",
       stats: "Stats Strip",
     },
   },
+
   programs: {
     label: "Programs",
     sections: {
@@ -51,6 +54,7 @@ export const VISIBILITY_SCHEMA = {
       nonCredit: "Non-Credit Courses Banner",
     },
   },
+
   faculty: {
     label: "Faculty",
     sections: {
@@ -58,6 +62,7 @@ export const VISIBILITY_SCHEMA = {
       grid: "Faculty Grid",
     },
   },
+
   gallery: {
     label: "Gallery",
     sections: {
@@ -65,6 +70,7 @@ export const VISIBILITY_SCHEMA = {
       grid: "Gallery Grid",
     },
   },
+
   blog: {
     label: "Blog",
     sections: {
@@ -72,6 +78,7 @@ export const VISIBILITY_SCHEMA = {
       list: "Blog List",
     },
   },
+
   notices: {
     label: "Notice Board",
     sections: {
@@ -79,6 +86,7 @@ export const VISIBILITY_SCHEMA = {
       list: "Notices List",
     },
   },
+
   downloads: {
     label: "Downloads",
     sections: {
@@ -86,6 +94,7 @@ export const VISIBILITY_SCHEMA = {
       list: "Downloads List",
     },
   },
+
   research: {
     label: "Research",
     sections: {
@@ -94,12 +103,14 @@ export const VISIBILITY_SCHEMA = {
       journals: "Journals",
     },
   },
+
   qaa: {
     label: "Quality Assurance & Accreditation (QAA)",
     sections: {
       hero: "Page Content (Reviewer Login Gate)",
     },
   },
+
   publications: {
     label: "Publications",
     sections: {
@@ -107,6 +118,7 @@ export const VISIBILITY_SCHEMA = {
       list: "Publications List",
     },
   },
+
   contact: {
     label: "Contact",
     sections: {
@@ -115,6 +127,7 @@ export const VISIBILITY_SCHEMA = {
       map: "Map",
     },
   },
+
   global: {
     label: "Global / Site-wide",
     sections: {
@@ -128,16 +141,22 @@ export const VISIBILITY_SCHEMA = {
 
 async function getOrCreateSettings() {
   let settings = await SiteSettings.findOne({ key: "main" });
-  if (!settings) settings = await SiteSettings.create({ key: "main" });
+
+  if (!settings) {
+    settings = await SiteSettings.create({ key: "main" });
+  }
+
   return settings;
 }
 
 // Merge saved visibility over the schema defaults (everything defaults to visible).
 function withVisibilityDefaults(saved = {}) {
   const merged = {};
+
   for (const [pageKey, pageDef] of Object.entries(VISIBILITY_SCHEMA)) {
     const savedPage = saved[pageKey] || {};
     const sections = {};
+
     for (const sectionKey of Object.keys(pageDef.sections)) {
       sections[sectionKey] =
         savedPage.sections &&
@@ -145,6 +164,7 @@ function withVisibilityDefaults(saved = {}) {
           ? savedPage.sections[sectionKey]
           : true;
     }
+
     merged[pageKey] = {
       pageEnabled:
         typeof savedPage.pageEnabled === "boolean"
@@ -153,6 +173,7 @@ function withVisibilityDefaults(saved = {}) {
       sections,
     };
   }
+
   return merged;
 }
 
@@ -160,13 +181,16 @@ function withVisibilityDefaults(saved = {}) {
 export async function getSettings(req, res) {
   try {
     const settings = await getOrCreateSettings();
+
     const json = settings.toObject();
     json.visibility = withVisibilityDefaults(json.visibility);
+
     res.json(json);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch settings", error: err.message });
+    res.status(500).json({
+      message: "Failed to fetch settings",
+      error: err.message,
+    });
   }
 }
 
@@ -175,7 +199,6 @@ export function getVisibilitySchema(req, res) {
   res.json(VISIBILITY_SCHEMA);
 }
 
-// PUT /api/settings — admin only
 // PUT /api/settings — admin only
 export async function updateSettings(req, res) {
   try {
@@ -191,6 +214,7 @@ export async function updateSettings(req, res) {
         await deleteUploadedFile(existing[field]);
       }
     }
+
     // heroImages is a full array replaced on each save — same diffing as Gallery.
     if (Array.isArray(req.body.heroImages)) {
       await deleteRemovedArrayFiles(
@@ -202,15 +226,22 @@ export async function updateSettings(req, res) {
     const updatedSettings = await SiteSettings.findOneAndUpdate(
       { key: "main" },
       { $set: req.body },
-      { new: true, upsert: true, runValidators: true },
+      {
+        new: true,
+        upsert: true,
+        runValidators: true,
+      },
     );
+
     const json = updatedSettings.toObject();
     json.visibility = withVisibilityDefaults(json.visibility);
+
     res.json(json);
   } catch (err) {
-    res
-      .status(400)
-      .json({ message: "Failed to update settings", error: err.message });
+    res.status(400).json({
+      message: "Failed to update settings",
+      error: err.message,
+    });
   }
 }
 
@@ -218,20 +249,26 @@ export async function updateSettings(req, res) {
 export async function updateVisibility(req, res) {
   try {
     const { visibility } = req.body;
+
     if (!visibility || typeof visibility !== "object") {
-      return res.status(400).json({ message: "visibility object is required" });
+      return res.status(400).json({
+        message: "visibility object is required",
+      });
     }
+
     const settings = await getOrCreateSettings();
     const current = settings.visibility || {};
 
     // Shallow-merge per page so a partial update from one toggle doesn't wipe others.
     const next = { ...current };
+
     for (const [pageKey, pageVal] of Object.entries(visibility)) {
       next[pageKey] = {
         pageEnabled:
           typeof pageVal.pageEnabled === "boolean"
             ? pageVal.pageEnabled
             : (next[pageKey]?.pageEnabled ?? true),
+
         sections: {
           ...(next[pageKey]?.sections || {}),
           ...(pageVal.sections || {}),
@@ -241,14 +278,17 @@ export async function updateVisibility(req, res) {
 
     settings.visibility = next;
     settings.markModified("visibility");
+
     await settings.save();
 
     const json = settings.toObject();
     json.visibility = withVisibilityDefaults(json.visibility);
+
     res.json(json);
   } catch (err) {
-    res
-      .status(400)
-      .json({ message: "Failed to update visibility", error: err.message });
+    res.status(400).json({
+      message: "Failed to update visibility",
+      error: err.message,
+    });
   }
 }

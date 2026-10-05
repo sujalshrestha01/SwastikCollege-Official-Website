@@ -127,6 +127,7 @@ const siteSettingsSchema = new mongoose.Schema(
           },
         ],
       },
+
       values: {
         type: [
           {
@@ -163,6 +164,7 @@ const siteSettingsSchema = new mongoose.Schema(
           },
         ],
       },
+
       leadership: {
         text: {
           type: String,
@@ -171,6 +173,20 @@ const siteSettingsSchema = new mongoose.Schema(
         },
         author: { type: String, default: "Dr. Principal Name" },
         role: { type: String, default: "Campus Chief / Principal" },
+      },
+
+      boardOfDirectors: {
+        type: [
+          {
+            name: { type: String, required: true },
+            position: { type: String, required: true },
+            photoUrl: { type: String, default: "" },
+            description: { type: String, default: "" },
+            order: { type: Number, default: 0 },
+            isActive: { type: Boolean, default: true },
+          },
+        ],
+        default: [],
       },
     },
   },
