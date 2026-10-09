@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import aboutus1 from "../../assets/aboutus1.jpg";
+import aboutus1 from "../../assets/aboutus1.png";
 
 import {
   ArrowRight,
