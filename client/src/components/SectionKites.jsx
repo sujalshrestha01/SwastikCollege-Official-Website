@@ -39,22 +39,24 @@ const PRESETS = {
     },
   ],
 
-  programs: [
-    {
-      left: "1%",
-      top: "28%",
-      size: 74,
-      color: "#f5b82e",
-      accent: "#e30613",
-    },
-    {
-      right: "1%",
-      bottom: "12%",
-      size: 82,
-      color: "#e30613",
-      accent: "#0ea5a4",
-    },
-  ],
+
+programs: [
+  {
+    left: "-1%",
+    top: "12%",
+    size: 76,
+    color: "#f5b82e",
+    accent: "#e30613",
+  },
+  {
+    right: "-1%",
+    bottom: "8%",
+    size: 76,
+    color: "#e30613",
+    accent: "#0ea5a4",
+  },
+],
+
 
   experience: [
     {
@@ -210,13 +212,18 @@ export default function SectionKites({ section = "default" }) {
     return () => context.revert();
   }, [section, positions]);
 
-  if (
+  const alwaysShowForSections = ["programs", "whyChooseUs"].includes(section);
+
+if (
+  !alwaysShowForSections &&
+  (
     !isDashainActive(theme) ||
     theme.showHomepageKites === false ||
     theme.showFlyingKites === false
-  ) {
-    return null;
-  }
+  )
+) {
+  return null;
+}
 
   const stringColor = isDark ? "#ffffff" : "#111827";
 

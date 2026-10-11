@@ -7,38 +7,37 @@ import { useSettings } from "../context/SettingsContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-
 const KITES = [
   {
     color: "#e30613",
     accent: "#f5b82e",
     size: 145,
-    position: "left-[4%] top-[12%]",
-    visibility: "hidden md:block",
+    position: "left-[1%] top-[12%]",
+    visibility: "block",
     depth: 0.7,
   },
   {
     color: "#168300",
     accent: "#0ea5a4",
     size: 130,
-    position: "right-[5%] top-[10%]",
-    visibility: "hidden md:block",
+    position: "right-[1%] top-[10%]",
+    visibility: "block",
     depth: 0.65,
   },
   {
     color: "#f5b82e",
     accent: "#e30613",
     size: 88,
-    position: "left-[16%] bottom-[12%]",
-    visibility: "hidden lg:block",
+    position: "left-[8%] bottom-[12%]",
+    visibility: "hidden sm:block",
     depth: 0.45,
   },
   {
     color: "#e30613",
     accent: "#0ea5a4",
     size: 92,
-    position: "right-[15%] bottom-[14%]",
-    visibility: "hidden lg:block",
+    position: "right-[8%] bottom-[14%]",
+    visibility: "hidden sm:block",
     depth: 0.5,
   },
   {
@@ -46,11 +45,10 @@ const KITES = [
     accent: "#f5b82e",
     size: 76,
     position: "left-[45%] top-[8%]",
-    visibility: "hidden xl:block",
+    visibility: "hidden sm:block",
     depth: 0.35,
   },
 ];
-
 
 function isDashainActive(theme) {
   if (!theme.enabled) return false;
@@ -73,7 +71,8 @@ export default function FlyingKites() {
 
   const theme = settings?.dashainTheme || {};
 
-  const active = isDashainActive(theme) && theme.showFlyingKites !== false;
+  const active =
+    isDashainActive(theme) && theme.showFlyingKites !== false;
 
   const kiteCount = Math.min(
     Math.max(Number(theme.homepageKiteCount) || 6, 2),
@@ -242,6 +241,7 @@ export default function FlyingKites() {
             color={kite.color}
             accent={kite.accent}
             size={kite.size}
+            className="h-auto w-[54px] sm:w-auto"
             string={
               theme.showKiteStrings === false
                 ? "none"

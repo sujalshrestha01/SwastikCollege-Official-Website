@@ -21,13 +21,18 @@ export default function Kite({
 
   return (
     <svg
-      className={className}
-      width={size}
-      height={size * 1.35}
-      viewBox="0 0 100 135"
-      overflow="visible"
-      aria-hidden="true"
-    >
+  className={className}
+  width={size}
+  height={size * 1.35}
+  style={{
+    width: "100%",
+    height: "auto",
+    aspectRatio: "100 / 135",
+  }}
+  viewBox="0 0 100 135"
+  overflow="visible"
+  aria-hidden="true"
+>
       {string !== "none" && (
         <path
           data-kite-string
