@@ -1,8 +1,10 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { CalendarDays, ArrowUpRight } from "lucide-react";
 import { getNotices, getEvents } from "../api/client";
 import { useSettings } from "../context/SettingsContext";
+import SectionKites from "./SectionKites";
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -19,8 +21,9 @@ function startOfToday() {
 }
 
 function getEventStatus(event) {
-  if (event.statusOverride && event.statusOverride !== "auto")
+  if (event.statusOverride && event.statusOverride !== "auto") {
     return event.statusOverride;
+  }
 
   const eventDate = new Date(event.date);
   const now = new Date();
@@ -30,6 +33,7 @@ function getEventStatus(event) {
 
   if (eventDay < today) return "past";
   if (eventDate <= now) return "ongoing";
+
   return "upcoming";
 }
 
@@ -37,63 +41,107 @@ export default function NewsEvents() {
   const [notices, setNotices] = useState([]);
   const [events, setEvents] = useState([]);
   const { isPageEnabled, isSectionVisible } = useSettings();
+
   const noticesEnabled = isPageEnabled("notices");
   const upcomingEnabled = isSectionVisible("home", "upcomingEvents");
 
   useEffect(() => {
-    if (noticesEnabled)
-      getNotices().then((data) => setNotices(data.slice(0, 4)));
-    if (upcomingEnabled) {
-      getEvents().then((data) =>
-        setEvents(
-          data
-            .filter((e) => getEventStatus(e) !== "past")
-            .sort((a, b) => {
-              const rank = { ongoing: 0, upcoming: 0, completed: 1 };
-              const ra = rank[getEventStatus(a)] ?? 0;
-              const rb = rank[getEventStatus(b)] ?? 0;
-              if (ra !== rb) return ra - rb;
-              return new Date(a.date) - new Date(b.date);
-            })
-            .slice(0, 4),
-        ),
-      );
+    let cancelled = false;
+
+    if (noticesEnabled) {
+      getNotices()
+        .then((data) => {
+          if (!cancelled) {
+            setNotices((data || []).slice(0, 4));
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to load notices:", error);
+        });
+    } else {
+      setNotices([]);
     }
+
+    if (upcomingEnabled) {
+      getEvents()
+        .then((data) => {
+          if (cancelled) return;
+
+          setEvents(
+            (data || [])
+              .filter((event) => getEventStatus(event) !== "past")
+              .sort((a, b) => {
+                const rank = {
+                  ongoing: 0,
+                  upcoming: 0,
+                  completed: 1,
+                };
+
+                const ra = rank[getEventStatus(a)] ?? 0;
+                const rb = rank[getEventStatus(b)] ?? 0;
+
+                if (ra !== rb) return ra - rb;
+
+                return new Date(a.date) - new Date(b.date);
+              })
+              .slice(0, 4),
+          );
+        })
+        .catch((error) => {
+          console.error("Failed to load events:", error);
+        });
+    } else {
+      setEvents([]);
+    }
+
+    return () => {
+      cancelled = true;
+    };
   }, [noticesEnabled, upcomingEnabled]);
 
   if (!noticesEnabled && !upcomingEnabled) return null;
 
   return (
-    <section className="bg-slate-50 dark:bg-navy-900/90 py-16 sm:py-20 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section className="relative isolate w-full overflow-hidden bg-slate-50 py-16 transition-colors duration-300 dark:bg-navy-900/90 sm:py-20">
+      <SectionKites section="newsEvents" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-8">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">
             Latest News &amp; Events
           </h2>
         </div>
 
         <div
-          className={`grid gap-8 ${noticesEnabled && upcomingEnabled ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}
+          className={`grid gap-8 ${
+            noticesEnabled && upcomingEnabled
+              ? "lg:grid-cols-3"
+              : "lg:grid-cols-1"
+          }`}
         >
           {noticesEnabled && (
             <div
-              className={`${upcomingEnabled ? "lg:col-span-2" : ""} grid sm:grid-cols-2 gap-4`}
+              className={`grid gap-4 sm:grid-cols-2 ${
+                upcomingEnabled ? "lg:col-span-2" : ""
+              }`}
             >
               {notices.map((n) => (
                 <Link
                   key={n._id || n.id}
                   to="/notices"
-                  className="group bg-white dark:bg-navy-800/80 rounded-r-2xl rounded-l-md p-5 border-l-4 border-l-transparent hover:border-l-[#D9383A] dark:hover:border-l-[#3B82F6] shadow-xs hover:shadow-md dark:shadow-navy-950/50 transition-all duration-300 flex flex-col justify-between"
+                  className="group flex flex-col justify-between rounded-r-2xl rounded-l-md border-l-4 border-l-transparent bg-white p-5 shadow-xs transition-all duration-300 hover:border-l-[#D9383A] hover:shadow-md dark:bg-navy-800/80 dark:shadow-navy-950/50 dark:hover:border-l-[#3B82F6]"
                 >
                   <div>
-                    <span className="inline-block text-[11px] font-mono uppercase tracking-wide text-[#D9383A] dark:text-[#3B82F6] font-semibold bg-red-50 dark:bg-blue-950/50 border border-red-100 dark:border-blue-900/40 px-2.5 py-0.5 rounded-full">
+                    <span className="inline-block rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wide text-[#D9383A] dark:border-blue-900/40 dark:bg-blue-950/50 dark:text-[#3B82F6]">
                       {n.category}
                     </span>
-                    <h3 className="font-semibold text-slate-900 dark:text-white mt-3 text-sm leading-snug group-hover:text-[#D9383A] dark:group-hover:text-[#3B82F6] transition-colors">
+
+                    <h3 className="mt-3 text-sm font-semibold leading-snug text-slate-900 transition-colors group-hover:text-[#D9383A] dark:text-white dark:group-hover:text-[#3B82F6]">
                       {n.title}
                     </h3>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-navy-100/70 mt-4 font-mono">
+
+                  <p className="mt-4 font-mono text-xs text-slate-500 dark:text-navy-100/70">
                     {formatDate(n.date)}
                   </p>
                 </Link>
@@ -102,42 +150,48 @@ export default function NewsEvents() {
           )}
 
           {upcomingEnabled && (
-            <div className="bg-[#0F172A] dark:bg-navy-950 text-white rounded-2xl p-6 shadow-lg flex flex-col justify-between">
+            <div className="flex flex-col justify-between rounded-2xl bg-[#0F172A] p-6 text-white shadow-lg dark:bg-navy-950">
               <div>
-                <div className="flex items-center gap-2 mb-6 text-white">
+                <div className="mb-6 flex items-center gap-2 text-white">
                   <CalendarDays
                     size={18}
                     className="text-[#D9383A] dark:text-[#3B82F6]"
                   />
-                  <h3 className="font-bold text-sm uppercase tracking-wider text-white">
+
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-white">
                     Upcoming Events
                   </h3>
                 </div>
+
                 <ul className="space-y-4">
                   {events.map((e) => {
                     const status = getEventStatus(e);
+
                     const badgeClass =
                       status === "ongoing"
-                        ? "text-emerald-300 bg-emerald-900/40 border-emerald-700/60 animate-pulse"
+                        ? "animate-pulse border-emerald-700/60 bg-emerald-900/40 text-emerald-300"
                         : status === "completed"
-                          ? "text-slate-400 bg-slate-800/70 border-slate-600/60"
-                          : "text-slate-400 dark:text-navy-100/70 bg-slate-800 dark:bg-navy-800 border-slate-700/60 dark:border-navy-700";
+                          ? "border-slate-600/60 bg-slate-800/70 text-slate-400"
+                          : "border-slate-700/60 bg-slate-800 text-slate-400 dark:border-navy-700 dark:bg-navy-800 dark:text-navy-100/70";
+
                     const label =
                       status === "ongoing"
                         ? "Ongoing"
                         : status === "completed"
                           ? "Completed"
                           : formatDate(e.date);
+
                     return (
                       <li
                         key={e._id || e.id}
-                        className="flex justify-between items-start gap-3 pb-4 border-b border-slate-800 dark:border-navy-800 last:border-0 last:pb-0"
+                        className="flex items-start justify-between gap-3 border-b border-slate-800 pb-4 last:border-0 last:pb-0 dark:border-navy-800"
                       >
-                        <span className="text-sm font-medium text-slate-200 dark:text-navy-100 leading-snug">
+                        <span className="text-sm font-medium leading-snug text-slate-200 dark:text-navy-100">
                           {e.title}
                         </span>
+
                         <span
-                          className={`font-mono text-xs shrink-0 px-2 py-0.5 rounded border ${badgeClass}`}
+                          className={`shrink-0 rounded border px-2 py-0.5 font-mono text-xs ${badgeClass}`}
                         >
                           {label}
                         </span>
@@ -153,12 +207,13 @@ export default function NewsEvents() {
         {noticesEnabled && (
           <Link
             to="/notices"
-            className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-navy-100 hover:text-[#D9383A] dark:hover:text-[#3B82F6] transition-colors group"
+            className="group mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-800 transition-colors hover:text-[#D9383A] dark:text-navy-100 dark:hover:text-[#3B82F6]"
           >
             <span>View full Notice Board</span>
+
             <ArrowUpRight
               size={16}
-              className="text-slate-400 dark:text-navy-100/70 group-hover:text-[#D9383A] dark:group-hover:text-[#3B82F6] transition-colors"
+              className="text-slate-400 transition-colors group-hover:text-[#D9383A] dark:text-navy-100/70 dark:group-hover:text-[#3B82F6]"
             />
           </Link>
         )}

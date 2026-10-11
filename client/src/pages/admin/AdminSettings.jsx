@@ -78,6 +78,20 @@ export default function AdminSettings() {
       },
     }));
   }
+  function setDashainTheme(key, value) {
+    setSettings((prev) => ({
+      ...prev,
+      dashainTheme: {
+        enabled: false,
+        autoSchedule: true,
+        startDate: "",
+        endDate: "",
+        showFlyingKites: true,
+        ...(prev.dashainTheme || {}),
+        [key]: value,
+      },
+    }));
+  }
 
   function setSocial(key, value) {
     setSettings((prev) => ({
@@ -373,6 +387,139 @@ export default function AdminSettings() {
           </Field>
         </div>
       </Card>
+
+      
+<Card title="Dashain seasonal theme">
+  <div className="space-y-4">
+    <label className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={Boolean(settings.dashainTheme?.enabled)}
+        onChange={(e) => setDashainTheme("enabled", e.target.checked)}
+      />
+      <span>
+        <span className="block font-medium">Enable Dashain theme</span>
+        <span className="block text-sm text-gray-500">
+          Enable seasonal kite decorations on the homepage.
+        </span>
+      </span>
+    </label>
+
+    <label className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={settings.dashainTheme?.autoSchedule !== false}
+        onChange={(e) =>
+          setDashainTheme("autoSchedule", e.target.checked)
+        }
+      />
+      <span>
+        <span className="block font-medium">Schedule automatically</span>
+        <span className="block text-sm text-gray-500">
+          Show the theme only between the selected dates.
+        </span>
+      </span>
+    </label>
+
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      
+<label className="block">
+  <span className="mb-1 block text-sm font-medium">
+    Homepage kite count
+  </span>
+  <select
+    value={String(settings.dashainTheme?.homepageKiteCount ?? 6)}
+    onChange={(e) =>
+      setDashainTheme("homepageKiteCount", Number(e.target.value))
+    }
+    className="w-full rounded-lg border border-gray-300 px-3 py-2"
+  >
+    <option value="2">2 kites</option>
+    <option value="3">3 kites</option>
+    <option value="4">4 kites</option>
+    <option value="5">5 kites</option>
+    <option value="6">6 kites</option>
+    <option value="7">7 kites</option>
+    <option value="8">8 kites</option>
+  </select>
+</label>
+
+
+      <label className="block">
+        <span className="mb-1 block text-sm font-medium">End date</span>
+        <input
+          type="date"
+          value={settings.dashainTheme?.endDate || ""}
+          onChange={(e) => setDashainTheme("endDate", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2"
+        />
+      </label>
+    </div>
+
+    <label className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={settings.dashainTheme?.showFlyingKites !== false}
+        onChange={(e) =>
+          setDashainTheme("showFlyingKites", e.target.checked)
+        }
+      />
+      <span>
+        <span className="block font-medium">Show flying kites</span>
+        <span className="block text-sm text-gray-500">
+          Control the animated kites in the hero.
+        </span>
+      </span>
+    </label>
+
+    <label className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={settings.dashainTheme?.showHomepageKites !== false}
+        onChange={(e) =>
+          setDashainTheme("showHomepageKites", e.target.checked)
+        }
+      />
+      <span>
+        <span className="block font-medium">Show homepage kites</span>
+        <span className="block text-sm text-gray-500">
+          Show decorative kites across the homepage, including near Why Choose Us.
+        </span>
+      </span>
+    </label>
+
+    <label className="block">
+      <span className="mb-1 block text-sm font-medium">Homepage kite count</span>
+      <select
+        value={settings.dashainTheme?.homepageKiteCount === 2 ? "2" : "3"}
+        onChange={(e) =>
+          setDashainTheme("homepageKiteCount", Number(e.target.value))
+        }
+        className="w-full rounded-lg border border-gray-300 px-3 py-2"
+      >
+        <option value="2">2 kites</option>
+        <option value="3">3 kites</option>
+      </select>
+    </label>
+
+    <label className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={settings.dashainTheme?.showKiteStrings !== false}
+        onChange={(e) =>
+          setDashainTheme("showKiteStrings", e.target.checked)
+        }
+      />
+      <span>
+        <span className="block font-medium">Show white kite strings</span>
+        <span className="block text-sm text-gray-500">
+          Control the decorative strings independently.
+        </span>
+      </span>
+    </label>
+  </div>
+</Card>
+
 
       <Card title="Homepage hero section">
         <div className="space-y-4">

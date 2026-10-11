@@ -24,6 +24,7 @@ import Journals from "./pages/Journals";
 import Publications from "./pages/Publications";
 import Qaa from "./pages/Qaa";
 import NotFound from "./pages/NotFound";
+import FlyingKites from "./components/FlyingKites";
 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AcceptInvite from "./pages/admin/AcceptInvite";
@@ -71,7 +72,8 @@ function PublicSite() {
     settings?.features?.blogDisabled || !isPageEnabled("blog");
 
   return (
-    <div className="min-h-screen flex flex-col bg-paper dark:bg-navy-900 transition-colors">
+  <div className="relative isolate min-h-screen flex flex-col bg-paper dark:bg-navy-900 transition-colors">
+    <FlyingKites />
       {isSectionVisible("global", "notificationTicker") && (
         <NotificationTicker />
       )}

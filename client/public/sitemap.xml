@@ -50,4 +50,29 @@
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.swastikcollege.edu.np/programs/bsc-csit</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.swastikcollege.edu.np/programs/bca</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.swastikcollege.edu.np/blog/beyond-the-classroom-moments-memories-from-our-recent-college-tour-1785763236105</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.swastikcollege.edu.np/blog/celebrating-campus-events-highlights-from-our-recent-college-fest-seminars-1785762985528</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.swastikcollege.edu.np/blog/beyond-the-classroom-how-building-real-projects-accelerates-your-tech-career-1785762815679</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

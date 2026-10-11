@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -70,21 +71,33 @@ const defaultSettings = {
   announcementBarText: "",
   announcementBarEnabled: false,
 
-  // Legacy flat toggles (kept for backward compatibility)
+ 
+  // Seasonal Dashain theme settings.
+ 
+dashainTheme: {
+  enabled: false,
+  autoSchedule: true,
+  startDate: "",
+  endDate: "",
+  showFlyingKites: true,
+  showHomepageKites: true,
+  homepageKiteCount: 8,
+  showKiteStrings: true,
+},
+
+
+
+  // Legacy flat toggles (kept for backward compatibility).
   features: {
     blogDisabled: false,
     galleryDisabled: false,
     heroStatusLogDisabled: false,
   },
 
-  // Generic page + section visibility engine. Populated from the server, which
-  // always merges saved values on top of the full page/section catalogue —
-  // so every page/section defaults to visible even before an admin ever
-  // touches the toggle screen.
-  // Shape: { <page>: { pageEnabled: bool, sections: { <section>: bool } } }
+  // Generic page + section visibility engine.
   visibility: {},
 
-  // Editable content for the About page
+  // Editable content for the About page.
   about: {
     timeline: [],
     values: [],
@@ -124,6 +137,12 @@ export function SettingsProvider({ children }) {
         about: {
           ...defaultSettings.about,
           ...(data.about || {}),
+        },
+
+        // Preserve defaults when older saved settings lack this field.
+        dashainTheme: {
+          ...defaultSettings.dashainTheme,
+          ...(data.dashainTheme || {}),
         },
       });
     }

@@ -75,6 +75,30 @@ const siteSettingsSchema = new mongoose.Schema(
     },
     announcementBarText: { type: String, default: "" },
     announcementBarEnabled: { type: Boolean, default: false },
+    // Seasonal website themes
+    dashainTheme: {
+      enabled: { type: Boolean, default: false },
+      autoSchedule: { type: Boolean, default: true },
+      startDate: { type: String, default: "" },
+      endDate: { type: String, default: "" },
+      showFlyingKites: { type: Boolean, default: true },
+      
+showHomepageKites: {
+  type: Boolean,
+  default: true,
+},
+homepageKiteCount: {
+  type: Number,
+  min: 2,
+  max: 12,
+  default: 8,
+},
+showKiteStrings: {
+  type: Boolean,
+  default: true,
+},
+    },
+
 
     // Component Visibility & Module Toggles Engine (legacy flat flags — kept for
     // backward compatibility with the /blog route guard in App.jsx).
