@@ -6,107 +6,33 @@ import DriftingKite from "./DriftingKite";
 
 const PRESETS = {
   quickAccess: [
-    {
-      left: "1%",
-      top: "8%",
-      size: 76,
-      color: "#e30613",
-      accent: "#f5b82e",
-    },
-    {
-      right: "1%",
-      bottom: "8%",
-      size: 70,
-      color: "#168300",
-      accent: "#0ea5a4",
-    },
+    { left: "1%", top: "8%", size: 76, color: "#e30613", accent: "#f5b82e" },
+    { right: "1%", bottom: "8%", size: 70, color: "#168300", accent: "#0ea5a4" },
   ],
 
   whyChooseUs: [
-    {
-      left: "1%",
-      top: "12%",
-      size: 82,
-      color: "#e30613",
-      accent: "#f5b82e",
-    },
-    {
-      right: "1%",
-      bottom: "12%",
-      size: 76,
-      color: "#168300",
-      accent: "#0ea5a4",
-    },
+    { left: "1%", top: "12%", size: 82, color: "#e30613", accent: "#f5b82e" },
+    { right: "1%", bottom: "12%", size: 76, color: "#168300", accent: "#0ea5a4" },
   ],
 
-
-programs: [
-  {
-    left: "-1%",
-    top: "12%",
-    size: 76,
-    color: "#f5b82e",
-    accent: "#e30613",
-  },
-  {
-    right: "-1%",
-    bottom: "8%",
-    size: 76,
-    color: "#e30613",
-    accent: "#0ea5a4",
-  },
-],
-
+  programs: [
+    { left: "1%", top: "12%", size: 76, color: "#f5b82e", accent: "#e30613" },
+    { right: "1%", bottom: "8%", size: 76, color: "#e30613", accent: "#0ea5a4" },
+  ],
 
   experience: [
-    {
-      left: "1%",
-      top: "18%",
-      size: 82,
-      color: "#168300",
-      accent: "#f5b82e",
-    },
-    {
-      right: "1%",
-      bottom: "15%",
-      size: 74,
-      color: "#e30613",
-      accent: "#0ea5a4",
-    },
+    { left: "1%", top: "18%", size: 82, color: "#168300", accent: "#f5b82e" },
+    { right: "1%", bottom: "15%", size: 74, color: "#e30613", accent: "#0ea5a4" },
   ],
 
   newsEvents: [
-    {
-      left: "1%",
-      top: "12%",
-      size: 76,
-      color: "#f5b82e",
-      accent: "#e30613",
-    },
-    {
-      right: "1%",
-      bottom: "12%",
-      size: 82,
-      color: "#168300",
-      accent: "#0ea5a4",
-    },
+    { left: "1%", top: "12%", size: 76, color: "#f5b82e", accent: "#e30613" },
+    { right: "1%", bottom: "12%", size: 82, color: "#168300", accent: "#0ea5a4" },
   ],
 
   default: [
-    {
-      left: "1%",
-      top: "20%",
-      size: 70,
-      color: "#e30613",
-      accent: "#f5b82e",
-    },
-    {
-      right: "1%",
-      bottom: "15%",
-      size: 70,
-      color: "#168300",
-      accent: "#0ea5a4",
-    },
+    { left: "1%", top: "20%", size: 70, color: "#e30613", accent: "#f5b82e" },
+    { right: "1%", bottom: "15%", size: 70, color: "#168300", accent: "#0ea5a4" },
   ],
 };
 
@@ -121,22 +47,22 @@ function isDashainActive(theme) {
   const start = new Date(`${theme.startDate}T00:00:00`);
   const end = new Date(`${theme.endDate}T23:59:59.999`);
 
-  if (
-    Number.isNaN(start.getTime()) ||
-    Number.isNaN(end.getTime()) ||
-    end < start
-  ) {
-    return false;
-  }
-
-  return now >= start && now <= end;
+  return (
+    !Number.isNaN(start.getTime()) &&
+    !Number.isNaN(end.getTime()) &&
+    end >= start &&
+    now >= start &&
+    now <= end
+  );
 }
 
 export default function SectionKites({ section = "default" }) {
   const rootRef = useRef(null);
   const [isDark, setIsDark] = useState(false);
+
   const { settings } = useSettings();
   const theme = settings?.dashainTheme || {};
+  const positions = PRESETS[section] || PRESETS.default;
 
   useEffect(() => {
     const updateTheme = () => {
@@ -163,13 +89,13 @@ export default function SectionKites({ section = "default" }) {
     return () => observer.disconnect();
   }, []);
 
-  const positions = PRESETS[section] || PRESETS.default;
-
   useEffect(() => {
     const root = rootRef.current;
 
     if (
       !root ||
+      !isDashainActive(theme) ||
+      theme.showHomepageKites === false ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       return undefined;
@@ -210,20 +136,21 @@ export default function SectionKites({ section = "default" }) {
     }, root);
 
     return () => context.revert();
-  }, [section, positions]);
+  }, [
+    section,
+    theme.enabled,
+    theme.autoSchedule,
+    theme.startDate,
+    theme.endDate,
+    theme.showHomepageKites,
+  ]);
 
-  const alwaysShowForSections = ["programs", "whyChooseUs"].includes(section);
-
-if (
-  !alwaysShowForSections &&
-  (
+  if (
     !isDashainActive(theme) ||
-    theme.showHomepageKites === false ||
-    theme.showFlyingKites === false
-  )
-) {
-  return null;
-}
+    theme.showHomepageKites === false
+  ) {
+    return null;
+  }
 
   const stringColor = isDark ? "#ffffff" : "#111827";
 

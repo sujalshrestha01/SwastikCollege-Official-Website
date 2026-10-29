@@ -7,7 +7,7 @@ import DriftingKite from "./DriftingKite";
 function isDashainActive(theme) {
   if (!theme?.enabled) return false;
 
-  if (!theme.autoSchedule) return true;
+  if (theme.autoSchedule === false) return true;
 
   if (!theme.startDate || !theme.endDate) return false;
 
@@ -24,47 +24,34 @@ function isDashainActive(theme) {
   );
 }
 
-
 const KITE_POSITIONS = [
-  // Hero transition and Why Choose Us
   { left: "4%", top: "8%", color: "#f20d20", accent: "#ffd43b", size: 62 },
   { left: "88%", top: "13%", color: "#159b16", accent: "#00d6d6", size: 58 },
-
-  // Open spaces around programs
   { left: "3%", top: "25%", color: "#ffbd16", accent: "#f20d20", size: 52 },
   { left: "91%", top: "31%", color: "#f20d20", accent: "#00d6d6", size: 48 },
-
-  // Swastik Experience
   { left: "10%", top: "42%", color: "#159b16", accent: "#ffd43b", size: 54 },
   { left: "85%", top: "47%", color: "#ffbd16", accent: "#f20d20", size: 48 },
-
-  // Latest News and Events
   { left: "4%", top: "59%", color: "#f20d20", accent: "#ffd43b", size: 50 },
   { left: "91%", top: "64%", color: "#159b16", accent: "#00d6d6", size: 54 },
-
-  // Lower homepage sections
   { left: "13%", top: "74%", color: "#ffbd16", accent: "#f20d20", size: 46 },
   { left: "84%", top: "79%", color: "#f20d20", accent: "#00d6d6", size: 48 },
   { left: "5%", top: "89%", color: "#159b16", accent: "#ffd43b", size: 42 },
   { left: "90%", top: "94%", color: "#ffbd16", accent: "#f20d20", size: 40 },
 ];
 
-
-
-
 export default function HomepageKites() {
   const rootRef = useRef(null);
   const [isDark, setIsDark] = useState(false);
 
   const { settings } = useSettings();
-  const theme = settings.dashainTheme || {};
+  const theme = settings?.dashainTheme || {};
   const active = isDashainActive(theme);
 
   useEffect(() => {
     const updateTheme = () => {
       setIsDark(
         document.documentElement.classList.contains("dark") ||
-          document.body.classList.contains("dark")
+          document.body.classList.contains("dark"),
       );
     };
 
@@ -85,6 +72,11 @@ export default function HomepageKites() {
     return () => observer.disconnect();
   }, []);
 
+  const count = Math.min(
+    Math.max(Number(theme.homepageKiteCount) || 6, 2),
+    KITE_POSITIONS.length,
+  );
+
   useEffect(() => {
     const root = rootRef.current;
 
@@ -92,7 +84,6 @@ export default function HomepageKites() {
       !root ||
       !active ||
       theme.showHomepageKites === false ||
-      !theme.showFlyingKites ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       return undefined;
@@ -116,22 +107,13 @@ export default function HomepageKites() {
   }, [
     active,
     theme.showHomepageKites,
-    theme.showFlyingKites,
     theme.homepageKiteCount,
   ]);
 
-  if (
-    !active ||
-    theme.showHomepageKites === false ||
-    !theme.showFlyingKites
-  ) {
+  if (!active || theme.showHomepageKites === false) {
     return null;
   }
 
-const count = Math.min(
-  Math.max(Number(theme.homepageKiteCount) || 6, 2),
-  KITE_POSITIONS.length
-);
   const stringColor = isDark ? "#ffffff" : "#000000";
 
   return (
@@ -142,7 +124,7 @@ const count = Math.min(
     >
       {KITE_POSITIONS.slice(0, count).map((kite, index) => (
         <div
-          key={index}
+          key={`homepage-kite-${index}`}
           data-homepage-kite
           className="absolute"
           style={{

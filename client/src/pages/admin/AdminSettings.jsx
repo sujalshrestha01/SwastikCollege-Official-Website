@@ -422,29 +422,6 @@ export default function AdminSettings() {
     </label>
 
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      
-<label className="block">
-  <span className="mb-1 block text-sm font-medium">
-    Homepage kite count
-  </span>
-  <select
-    value={String(settings.dashainTheme?.homepageKiteCount ?? 6)}
-    onChange={(e) =>
-      setDashainTheme("homepageKiteCount", Number(e.target.value))
-    }
-    className="w-full rounded-lg border border-gray-300 px-3 py-2"
-  >
-    <option value="2">2 kites</option>
-    <option value="3">3 kites</option>
-    <option value="4">4 kites</option>
-    <option value="5">5 kites</option>
-    <option value="6">6 kites</option>
-    <option value="7">7 kites</option>
-    <option value="8">8 kites</option>
-  </select>
-</label>
-
-
       <label className="block">
         <span className="mb-1 block text-sm font-medium">End date</span>
         <input
@@ -489,16 +466,21 @@ export default function AdminSettings() {
     </label>
 
     <label className="block">
-      <span className="mb-1 block text-sm font-medium">Homepage kite count</span>
+      <span className="mb-1 block text-sm font-medium">
+        Homepage kite count
+      </span>
       <select
-        value={settings.dashainTheme?.homepageKiteCount === 2 ? "2" : "3"}
+        value={String(settings.dashainTheme?.homepageKiteCount ?? 6)}
         onChange={(e) =>
           setDashainTheme("homepageKiteCount", Number(e.target.value))
         }
         className="w-full rounded-lg border border-gray-300 px-3 py-2"
       >
-        <option value="2">2 kites</option>
-        <option value="3">3 kites</option>
+        {Array.from({ length: 11 }, (_, index) => index + 2).map((count) => (
+          <option key={count} value={count}>
+            {count} kites
+          </option>
+        ))}
       </select>
     </label>
 
