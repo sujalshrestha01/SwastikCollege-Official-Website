@@ -24,6 +24,7 @@ const staticRoutes = [
   { path: "/about", changefreq: "monthly", priority: "0.8" },
   { path: "/faculty", changefreq: "monthly", priority: "0.6" },
   { path: "/notices", changefreq: "daily", priority: "0.8" },
+  { path: "/scholarships", changefreq: "monthly", priority: "0.6" },
   { path: "/downloads", changefreq: "weekly", priority: "0.5" },
   { path: "/gallery", changefreq: "monthly", priority: "0.5" },
   { path: "/blog", changefreq: "daily", priority: "0.7" },

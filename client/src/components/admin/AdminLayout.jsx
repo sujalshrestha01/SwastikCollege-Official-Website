@@ -29,6 +29,7 @@ import {
   UserCheck,
   UserX,
   ShieldCheck,
+  Award,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { Switch } from "./Ui";
@@ -57,6 +58,7 @@ const FULL_NAV_GROUPS = [
     items: [
       { to: "/admin/blog", label: "Blog Posts", icon: FileText },
       { to: "/admin/notices", label: "Notice Board", icon: Bell },
+      { to: "/admin/scholarships", label: "Scholarships", icon: Award },
       { to: "/admin/downloads", label: "Downloads", icon: FileDown },
       { to: "/admin/gallery", label: "Gallery", icon: Images },
     ],

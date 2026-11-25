@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router";
 import {
   Search,
   Download,
@@ -6,17 +7,29 @@ import {
   Bell,
   ChevronLeft,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import {
   getNotices,
   resolveImageUrl,
   downloadFile,
   previewFile,
+  byLatest,
 } from "../api/client";
 import { Section } from "../components/Visibility";
 import SEO from "../components/SEO";
 
-const CATEGORIES = ["All", "Exams", "Admissions", "Events", "General"];
+const CATEGORIES = [
+  "All",
+  "Exams",
+  "Admissions",
+  "Scholarships",
+  "Events",
+  "General",
+];
+
+const detailsBtnCls =
+  "inline-flex items-center gap-1.5 text-xs font-medium text-white bg-[#D9383A] dark:bg-[#1E3A8A] px-3.5 py-2 rounded-full hover:opacity-90 transition-opacity";
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -70,7 +83,7 @@ export default function NoticeBoard() {
               .toLowerCase()
               .includes(query.toLowerCase()),
       )
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      .sort(byLatest);
   }, [notices, query, category]);
 
   // Reset to first page when searching/filtering
@@ -181,25 +194,46 @@ export default function NoticeBoard() {
                 </p>
               </div>
 
-              {n.fileUrl && (
-                <div className="shrink-0 flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handlePreview(n)}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3.5 py-2 rounded-full hover:border-[#D9383A] dark:hover:border-[#1E3A8A] hover:text-[#D9383A] dark:hover:text-[#3B82F6] transition-colors"
-                  >
-                    <Eye size={14} />
-                    View
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDownload(n)}
-                    disabled={downloadingId === n._id}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3.5 py-2 rounded-full hover:border-[#D9383A] dark:hover:border-[#1E3A8A] hover:text-[#D9383A] dark:hover:text-[#3B82F6] transition-colors disabled:opacity-60"
-                  >
-                    <Download size={14} />
-                    {downloadingId === n._id ? "Downloading…" : "Download"}
-                  </button>
+              {(n.fileUrl || n.linkUrl) && (
+                <div className="shrink-0 flex items-center gap-2 flex-wrap">
+                  {n.linkUrl &&
+                    (/^https?:\/\//i.test(n.linkUrl) ? (
+                      <a
+                        href={n.linkUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={detailsBtnCls}
+                      >
+                        View details
+                        <ArrowRight size={14} />
+                      </a>
+                    ) : (
+                      <Link to={n.linkUrl} className={detailsBtnCls}>
+                        View details
+                        <ArrowRight size={14} />
+                      </Link>
+                    ))}
+                  {n.fileUrl && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handlePreview(n)}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3.5 py-2 rounded-full hover:border-[#D9383A] dark:hover:border-[#1E3A8A] hover:text-[#D9383A] dark:hover:text-[#3B82F6] transition-colors"
+                      >
+                        <Eye size={14} />
+                        View
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDownload(n)}
+                        disabled={downloadingId === n._id}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-600 dark:text-navy-100 border border-navy-100 dark:border-navy-700 px-3.5 py-2 rounded-full hover:border-[#D9383A] dark:hover:border-[#1E3A8A] hover:text-[#D9383A] dark:hover:text-[#3B82F6] transition-colors disabled:opacity-60"
+                      >
+                        <Download size={14} />
+                        {downloadingId === n._id ? "Downloading…" : "Download"}
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>

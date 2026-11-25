@@ -6,11 +6,13 @@ const noticeSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Exams", "Admissions", "Events", "General"],
+      enum: ["Exams", "Admissions", "Scholarships", "Events", "General"],
     },
     date: { type: Date, required: true, default: Date.now },
     excerpt: { type: String, required: true },
     fileUrl: { type: String, default: "" },
+    // Optional related page, e.g. "/scholarships" — shown as a "View details" link.
+    linkUrl: { type: String, trim: true, default: "" },
   },
   { timestamps: true },
 );

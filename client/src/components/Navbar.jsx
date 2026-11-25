@@ -45,6 +45,7 @@ const ALL_LINKS = [
     dropdown: [
       { to: "/qaa", label: "QAA", page: "qaa" },
       { to: "/publications", label: "Publications", page: "publications" },
+      { to: "/scholarships", label: "Scholarships", page: "scholarships" },
     ],
   },
   { to: "/contact", label: "Contact", page: "contact" },

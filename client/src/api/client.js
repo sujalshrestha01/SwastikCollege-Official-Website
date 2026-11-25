@@ -152,9 +152,50 @@ async function apiCall(path, options = {}) {
 }
 
 // ---------- Public reads (fall back to demo data if API is offline) ----------
-export function getNotices(params = {}) {
+// Newest first: by notice date, then by most recent edit/creation.
+export function byLatest(a, b) {
+  return (
+    new Date(b.date) - new Date(a.date) ||
+    new Date(b.updatedAt || b.createdAt || 0) -
+      new Date(a.updatedAt || a.createdAt || 0)
+  );
+}
+
+// Published scholarship lists are shown on the Notice Board (and the homepage)
+// as "Scholarships" notices automatically, so nobody has to post a separate
+// notice for each list. Only used for the public views — the admin Notice
+// Board still lists real notices only.
+function scholarshipToNotice(item) {
+  const firstParagraph = (item.description || "").split(/\n\s*\n/)[0].trim();
+  return {
+    _id: `scholarship-${item._id}`,
+    isScholarship: true,
+    title: item.title,
+    category: "Scholarships",
+    date: item.date || item.createdAt,
+    updatedAt: item.updatedAt,
+    createdAt: item.createdAt,
+    excerpt: firstParagraph,
+    fileUrl: item.fileUrl || "",
+    linkUrl: "/scholarships",
+  };
+}
+
+export async function getNotices(params = {}) {
   const qs = new URLSearchParams(params).toString();
-  return safeFetch(`/notices${qs ? `?${qs}` : ""}`, mockNotices);
+  const wantsScholarships =
+    !params.category ||
+    params.category === "All" ||
+    params.category === "Scholarships";
+  const [notices, scholarships] = await Promise.all([
+    safeFetch(`/notices${qs ? `?${qs}` : ""}`, mockNotices),
+    wantsScholarships ? safeFetch("/scholarships", []) : [],
+  ]);
+  const search = (params.search || "").toLowerCase();
+  const extra = (scholarships || [])
+    .map(scholarshipToNotice)
+    .filter((n) => !search || n.title.toLowerCase().includes(search));
+  return [...(notices || []), ...extra].sort(byLatest);
 }
 export function getDownloads() {
   return safeFetch("/downloads", []);
@@ -203,6 +244,9 @@ export function getJournals() {
 }
 export function getPublications() {
   return safeFetch("/publications", []);
+}
+export function getScholarships() {
+  return safeFetch("/scholarships", []);
 }
 // Note: QAA documents are intentionally NOT exposed here — that list now
 // requires login (server/routes/qaa.js requires requireAuth on GET too), so
@@ -334,6 +378,11 @@ export const galleryAdmin = makeCrud("gallery");
 export const callForPapersAdmin = makeCrud("research/call-for-papers");
 export const journalsAdmin = makeCrud("research/journals");
 export const publicationsAdmin = makeCrud("publications");
+// Scholarship lists — admin listing uses /all so unpublished drafts show too.
+export const scholarshipsAdmin = {
+  ...makeCrud("scholarships"),
+  list: () => apiCall("/scholarships/all"),
+};
 
 // Author Guidelines is a singleton (like Settings), not a list — its own
 // pair of calls rather than the makeCrud() list helper.

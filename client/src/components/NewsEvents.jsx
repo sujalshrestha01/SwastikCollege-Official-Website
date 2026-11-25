@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { CalendarDays, ArrowUpRight } from "lucide-react";
@@ -128,7 +127,7 @@ export default function NewsEvents() {
               {notices.map((n) => (
                 <Link
                   key={n._id || n.id}
-                  to="/notices"
+                  to={n.linkUrl?.startsWith("/") ? n.linkUrl : "/notices"}
                   className="group flex flex-col justify-between rounded-r-2xl rounded-l-md border-l-4 border-l-transparent bg-white p-5 shadow-xs transition-all duration-300 hover:border-l-[#D9383A] hover:shadow-md dark:bg-navy-800/80 dark:shadow-navy-950/50 dark:hover:border-l-[#3B82F6]"
                 >
                   <div>

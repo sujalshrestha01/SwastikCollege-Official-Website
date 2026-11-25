@@ -22,6 +22,7 @@ import AuthorGuidelines from "./pages/AuthorGuidelines";
 import CallForPaper from "./pages/CallForPaper";
 import Journals from "./pages/Journals";
 import Publications from "./pages/Publications";
+import Scholarships from "./pages/Scholarships";
 import Qaa from "./pages/Qaa";
 import NotFound from "./pages/NotFound";
 import FlyingKites from "./components/FlyingKites";
@@ -54,6 +55,7 @@ import AdminAuthorGuidelines from "./pages/admin/AdminAuthorGuidelines";
 import AdminCallForPapers from "./pages/admin/AdminCallForPapers";
 import AdminJournals from "./pages/admin/AdminJournals";
 import AdminPublications from "./pages/admin/AdminPublications";
+import AdminScholarships from "./pages/admin/AdminScholarships";
 import AdminQaa from "./pages/admin/AdminQaa";
 import NonCreditCourses from "./pages/NonCreditCourses";
 import { PageGate } from "./components/Visibility";
@@ -194,6 +196,14 @@ function PublicSite() {
             }
           />
           <Route
+            path="/scholarships"
+            element={
+              <PageGate page="scholarships">
+                <Scholarships />
+              </PageGate>
+            }
+          />
+          <Route
             path="/qaa"
             element={
               <PageGate page="qaa">
@@ -268,6 +278,7 @@ export default function App() {
               <Route path="call-for-papers" element={<AdminCallForPapers />} />
               <Route path="journals" element={<AdminJournals />} />
               <Route path="publications" element={<AdminPublications />} />
+              <Route path="scholarships" element={<AdminScholarships />} />
               <Route path="qaa" element={<AdminQaa />} />
               <Route path="visibility" element={<AdminVisibility />} />
               <Route path="settings" element={<AdminSettings />} />

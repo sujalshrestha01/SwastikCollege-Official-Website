@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.js";
 import qaaRouter from "./routes/qaa.js";
 import researchRouter from "./routes/research.js";
 import publicationsRouter from "./routes/publications.js";
+import scholarshipsRouter from "./routes/scholarships.js";
 import settingsRouter from "./routes/settings.js";
 import noticesRouter from "./routes/notices.js";
 import downloadsRouter from "./routes/downloads.js";
@@ -108,6 +109,7 @@ app.use("/api/admin-push", adminPushRouter);
 app.use("/api/qaa", qaaRouter);
 app.use("/api/research", researchRouter);
 app.use("/api/publications", publicationsRouter);
+app.use("/api/scholarships", scholarshipsRouter);
 
 // 404 handler for unknown API routes
 app.use("/api", (req, res) => {

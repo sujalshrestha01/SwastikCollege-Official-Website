@@ -109,6 +109,7 @@ export default function Footer() {
   const exploreLinks = [
     { to: "/programs", label: "Academic Programs", page: "programs" },
     { to: "/notices", label: "Notice Board", page: "notices" },
+    { to: "/scholarships", label: "Scholarships", page: "scholarships" },
     { to: "/about", label: "About Us", page: "about" },
     { to: "/faculty", label: "Faculty", page: "faculty" },
     { to: "/contact", label: "Contact Us", page: "contact" },

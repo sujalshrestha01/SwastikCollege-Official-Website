@@ -119,6 +119,14 @@ export const VISIBILITY_SCHEMA = {
     },
   },
 
+  scholarships: {
+    label: "Scholarships",
+    sections: {
+      hero: "Page Hero",
+      list: "Scholarship Lists",
+    },
+  },
+
   contact: {
     label: "Contact",
     sections: {
