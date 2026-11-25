@@ -14,13 +14,14 @@ import {
 } from "../../components/admin/Ui";
 import FileUpload from "../../components/admin/FileUpload";
 
-const categories = ["Exams", "Admissions", "Events", "General"];
+const categories = ["Exams", "Admissions", "Scholarships", "Events", "General"];
 const empty = () => ({
   title: "",
   category: "General",
   date: new Date().toISOString().slice(0, 10),
   excerpt: "",
   fileUrl: "",
+  linkUrl: "",
 });
 
 export default function AdminNotices() {
@@ -119,6 +120,18 @@ export default function AdminNotices() {
                 value={editing.excerpt}
                 onChange={(e) =>
                   setEditing({ ...editing, excerpt: e.target.value })
+                }
+              />
+            </Field>
+            <Field
+              label="Related page link (optional)"
+              hint='Shows a "View details" button, e.g. /scholarships'
+            >
+              <Input
+                value={editing.linkUrl || ""}
+                placeholder="/scholarships"
+                onChange={(e) =>
+                  setEditing({ ...editing, linkUrl: e.target.value })
                 }
               />
             </Field>
